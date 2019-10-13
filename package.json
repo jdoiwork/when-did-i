@@ -1,0 +1,9 @@
+{
+  "name": "when-did-i",
+  "version": "1.0.0",
+  "description": "Web App that Manage \"When did I do that?\"",
+  "main": "src/index.js",
+  "repository": "git@github.com:jdoiwork/when-did-i.git",
+  "author": "jdoi <jdoi.work@gmail.com>",
+  "license": "MIT"
+}
