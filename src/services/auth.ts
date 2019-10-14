@@ -51,5 +51,8 @@ function subscribe(callback) {
     })
 }
 
+function signOut() {
+    firebase.auth().signOut().catch(logError)
+}
 
-export { signIn, subscribe }
+export { signIn, signOut, subscribe }
