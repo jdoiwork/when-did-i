@@ -1,4 +1,5 @@
-
+// import bulma from 'bulma'
+require('bulma')
 import { Elm } from './Main.elm'
 
 require("./inits/firebase-init").init()

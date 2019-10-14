@@ -114,12 +114,12 @@ loggedOutView : Model -> Html Msg
 loggedOutView model =
   div []
     [ h1 [] [ text "Login"]
-    , button [ onClick <| LoginWith Google ] [text "Google Login"]
+    , button [ class "button", onClick <| LoginWith Google ] [text "Google Login"]
     ]
 
 loggedInView : Model -> Html Msg
 loggedInView model =
   div []
     [ h1 [] [ text "Hello 😀"]
-    , button [ onClick <| Logout ] [text "Logout"]
+    , button [ class "button", onClick <| Logout ] [text "Logout"]
     ]
