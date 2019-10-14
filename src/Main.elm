@@ -8,6 +8,8 @@ import Html.Events exposing (..)
 import Json.Encode as E
 import Url
 
+import Page.Nav exposing (..)
+
 main : Program () Model Msg
 main =
   Browser.application
@@ -92,13 +94,13 @@ subscriptions model =
     [ loginStatusChanged LoginStatusChanged
     ]
 
-
+-- VIEWS
 
 view : Model -> Browser.Document Msg
 view model =
   { title = "When did I? 🤔"
   , body =
-    [ navView model
+    [ topNav
     , p [] [ loginStatus model ]
     ]
   }
@@ -122,22 +124,4 @@ loggedInView model =
   div []
     [ h1 [] [ text "Hello 😀"]
     , button [ class "button", onClick <| Logout ] [text "Logout"]
-    ]
-
-navView : Model -> Html Msg
-navView model =
-  nav
-    -- attrs
-    [ class "navbar"
-    , attribute "role" "navigation"
-    , attribute "aria-label" "main navigation"
-    ]
-    -- elements
-    [ div
-        [ class "navbar-brand" ]
-        [ a
-            [ class "navbar-item", class "title", href "/" ]
-            [ text "🤔 When did I? "]
-        ]
-
     ]
