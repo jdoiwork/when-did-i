@@ -4,6 +4,8 @@ import Browser
 import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (..)
+import Json.Encode as E
 import Url
 
 main : Program () Model Msg
@@ -32,6 +34,10 @@ type Login = Checking
            | Logout
            | Login
 
+type AuthProvider = Google
+                  | Twitter
+                  | Facebook
+                  | Github
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
@@ -41,6 +47,7 @@ type Msg
   = LinkClicked Browser.UrlRequest
   | UrlChanged Url.Url
   | LoginStatusChanged String
+  | LoginWith AuthProvider
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -65,12 +72,14 @@ update msg model =
                     "logout" -> Logout
                     _ -> Checking
       in ( { model | login = login }, Cmd.none )
-
+    LoginWith provider ->
+      ( model, loginWith <| E.string "google")
 -- SUBSCRIPTIONS
 
 port refreshTimer : (String -> msg) -> Sub msg
 
 port loginStatusChanged : (String -> msg) -> Sub msg
+port loginWith : E.Value -> Cmd msg
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -92,7 +101,14 @@ view model =
 loginStatus : Model -> Html Msg
 loginStatus model =
   case model.login of
-    Checking -> text "Checking"
-    Logout   -> text "Logout"
-    Login    -> text "Login"
+    Checking -> text "Checking..."
+    Logout   -> loggedOutView model
+    Login    -> text "Hello 😀"
     
+loggedOutView : Model -> Html Msg
+loggedOutView model =
+  div []
+    [ h1 [] [ text "Login"]
+    , button [ onClick <| LoginWith Google ] [text "Google Login"]
+    ]
+  
