@@ -25,16 +25,22 @@ main =
 type alias Model =
   { key : Nav.Key
   , url : Url.Url
+  , login : Login
   }
+  
+type Login = Checking
+           | Logout
+           | Login
 
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
-  ( Model key url, Cmd.none )
+  ( Model key url Checking, Cmd.none )
 
 type Msg
   = LinkClicked Browser.UrlRequest
   | UrlChanged Url.Url
+  | LoginStatusChanged String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -52,15 +58,24 @@ update msg model =
       ( { model | url = url }
       , Cmd.none
       )
+      
+    LoginStatusChanged key ->
+      let login = case key of
+                    "login" -> Login
+                    "logout" -> Logout
+                    _ -> Checking
+      in ( { model | login = login }, Cmd.none )
 
 -- SUBSCRIPTIONS
 
 port refreshTimer : (String -> msg) -> Sub msg
 
+port loginStatusChanged : (String -> msg) -> Sub msg
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.batch
-    [ --refreshTimer TimerRefreshed
+    [ loginStatusChanged LoginStatusChanged
     ]
 
 
@@ -70,5 +85,14 @@ view model =
   { title = "When did I?"
   , body =
     [ h1 [] [text "Elm hello"]
+    , p [] [ loginStatus model ]
     ]
   }
+  
+loginStatus : Model -> Html Msg
+loginStatus model =
+  case model.login of
+    Checking -> text "Checking"
+    Logout   -> text "Logout"
+    Login    -> text "Login"
+    

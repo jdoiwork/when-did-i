@@ -7,3 +7,6 @@ const app = Elm.Main.init({
 
 console.log("hello typescript")
 console.log(app)
+
+// dummy login
+setTimeout(() => app.ports.loginStatusChanged.send("login"), 3000)
