@@ -96,9 +96,9 @@ subscriptions model =
 
 view : Model -> Browser.Document Msg
 view model =
-  { title = "When did I?"
+  { title = "When did I? 🤔"
   , body =
-    [ h1 [] [text "Elm hello"]
+    [ navView model
     , p [] [ loginStatus model ]
     ]
   }
@@ -122,4 +122,22 @@ loggedInView model =
   div []
     [ h1 [] [ text "Hello 😀"]
     , button [ class "button", onClick <| Logout ] [text "Logout"]
+    ]
+
+navView : Model -> Html Msg
+navView model =
+  nav
+    -- attrs
+    [ class "navbar"
+    , attribute "role" "navigation"
+    , attribute "aria-label" "main navigation"
+    ]
+    -- elements
+    [ div
+        [ class "navbar-brand" ]
+        [ a
+            [ class "navbar-item", class "title", href "/" ]
+            [ text "🤔 When did I? "]
+        ]
+
     ]
