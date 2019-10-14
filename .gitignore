@@ -64,3 +64,5 @@ typings/
 .cache
 dist
 elm-stuff
+.firebase
+public
