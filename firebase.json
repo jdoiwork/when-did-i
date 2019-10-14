@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "when-did-i",
     "public": "public",
     "ignore": [
       "firebase.json",
