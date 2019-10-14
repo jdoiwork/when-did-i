@@ -1,8 +1,9 @@
 
 import { Elm } from './Main.elm'
 
-Elm.Main.init({
-  node: document.querySelector('main')
+const app = Elm.Main.init({
+  //node: document.querySelector('main')
 })
 
 console.log("hello typescript")
+console.log(app)
