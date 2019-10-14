@@ -27,12 +27,12 @@ main =
 type alias Model =
   { key : Nav.Key
   , url : Url.Url
-  , login : Login
+  , login : LoginStatus
   }
   
-type Login = Checking
-           | Logout
-           | Login
+type LoginStatus = Checking
+                 | LoggedOut
+                 | LoggedIn
 
 type AuthProvider = Google
                   | Twitter
@@ -48,6 +48,7 @@ type Msg
   | UrlChanged Url.Url
   | LoginStatusChanged String
   | LoginWith AuthProvider
+  | Logout
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -68,18 +69,22 @@ update msg model =
       
     LoginStatusChanged key ->
       let login = case key of
-                    "login" -> Login
-                    "logout" -> Logout
+                    "login" -> LoggedIn
+                    "logout" -> LoggedOut
                     _ -> Checking
       in ( { model | login = login }, Cmd.none )
+
     LoginWith provider ->
       ( model, loginWith <| E.string "google")
+      
+    Logout -> (model, logout ())
 -- SUBSCRIPTIONS
 
 port refreshTimer : (String -> msg) -> Sub msg
 
 port loginStatusChanged : (String -> msg) -> Sub msg
 port loginWith : E.Value -> Cmd msg
+port logout : () -> Cmd msg
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -101,9 +106,9 @@ view model =
 loginStatus : Model -> Html Msg
 loginStatus model =
   case model.login of
-    Checking -> text "Checking..."
-    Logout   -> loggedOutView model
-    Login    -> text "Hello 😀"
+    Checking  -> text "Checking..."
+    LoggedOut -> loggedOutView model
+    LoggedIn  -> loggedInView model
     
 loggedOutView : Model -> Html Msg
 loggedOutView model =
@@ -111,4 +116,10 @@ loggedOutView model =
     [ h1 [] [ text "Login"]
     , button [ onClick <| LoginWith Google ] [text "Google Login"]
     ]
-  
+
+loggedInView : Model -> Html Msg
+loggedInView model =
+  div []
+    [ h1 [] [ text "Hello 😀"]
+    , button [ onClick <| Logout ] [text "Logout"]
+    ]
