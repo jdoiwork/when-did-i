@@ -21,7 +21,8 @@ function logError(error) {
 
 async function signIn() : Promise<void> {
     try {
-        const result = await firebase.auth().signInWithPopup(providers.google)
+        // const result = await firebase.auth().signInWithPopup(providers.google)
+        const result = await firebase.auth().signInWithRedirect(providers.google)
         // This gives you a Google Access Token. You can use it to access the Google API.
         // let token = result.credential.accessToken;
         // // The signed-in user info.
