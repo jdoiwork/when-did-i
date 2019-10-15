@@ -10,7 +10,7 @@ import Url
 
 import Page.Nav exposing (..)
 import Page.Welcome exposing (..)
-import Page.Login exposing (..)
+import Page.Login
 
 main : Program () Model Msg
 main =
@@ -38,10 +38,6 @@ type LoginStatus = Checking
                  | LoggedOut
                  | LoggedIn
 
-type AuthProvider = Google
-                  | Twitter
-                  | Facebook
-                  | Github
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
@@ -51,7 +47,7 @@ type Msg
   = LinkClicked Browser.UrlRequest
   | UrlChanged Url.Url
   | LoginStatusChanged String
-  | LoginWith AuthProvider
+  | RequestLogin Page.Login.AuthProvider
   | Logout
 
 
@@ -76,9 +72,9 @@ update msg model =
                     "login" -> LoggedIn
                     "logout" -> LoggedOut
                     _ -> Checking
-      in ( { model | login = login }, Cmd.none )
+      in ( { model | login = login }, Nav.pushUrl model.key "/" )
 
-    LoginWith provider ->
+    RequestLogin provider ->
       ( model, loginWith <| E.string "google")
       
     Logout -> (model, logout ())
@@ -105,7 +101,7 @@ view model =
       case model.url.path of
         "/login" ->
           [ topNav
-          , login
+          , Html.map (\(Page.Login.LoginWith p) -> RequestLogin p) Page.Login.login
 
           ]
         _ -> case model.login of
