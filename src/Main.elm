@@ -9,6 +9,7 @@ import Json.Encode as E
 import Url
 
 import Page.Nav exposing (..)
+import Page.Welcome exposing (..)
 
 main : Program () Model Msg
 main =
@@ -117,6 +118,7 @@ loggedOutView model =
   div []
     [ h1 [] [ text "Login"]
     , button [ class "button", onClick <| LoginWith Google ] [text "Google Login"]
+    , welcome
     ]
 
 loggedInView : Model -> Html Msg
