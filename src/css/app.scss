@@ -1,6 +1,6 @@
-
+@import '~bulma';
 
 body {
-  background: hsl(0, 0%, 96%);
+  background: $light;
   min-height: 100vh;
 }
