@@ -57,4 +57,15 @@ function signOut() : void {
     firebase.auth().signOut().catch(logError)
 }
 
-export { signIn, signOut, subscribe }
+async function getRedirectResult() {
+    try {
+        const result = await firebase.auth().getRedirectResult()
+        console.log("getRedirectResult", result)
+    }
+    catch (error) {
+        console.error("getRedirectResult", error)
+    }
+    
+}
+
+export { signIn, signOut, subscribe, getRedirectResult }
