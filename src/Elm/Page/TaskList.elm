@@ -69,9 +69,9 @@ itemCardView item =
         [ text "2019/10/16 12:34:56"]
     , footer
         [ class "card-footer"]
-        [ a [ class "card-footer-item", onClick <| Delete item.uid, href "#" ] [ text "delete"]
-        , a [ class "card-footer-item", onClick <| Delete item.uid, href "#" ] [ text "Edit"]
-        , a [ class "card-footer-item", onClick <| Delete item.uid, href "#" ] [ text "Done Again!"]
+        [ a [ class "card-footer-item", onClick <| Delete item.uid ] [ text "delete"]
+        , a [ class "card-footer-item", onClick <| Delete item.uid ] [ text "Edit"]
+        , a [ class "card-footer-item", onClick <| Delete item.uid ] [ text "Done Again!"]
         ]
     ]
 

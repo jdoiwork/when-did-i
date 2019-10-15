@@ -61,6 +61,8 @@ update msg model =
         Browser.Internal url ->
           ( model, Nav.pushUrl model.key (Url.toString url) )
 
+        Browser.External "" -> -- Ignore empty link
+          ( model, Cmd.none )
         Browser.External href ->
           ( model, Nav.load href )
 
