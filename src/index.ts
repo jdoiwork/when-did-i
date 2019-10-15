@@ -1,4 +1,4 @@
-import 'bulma'
+import './inits/css-init'
 import * as auth from './services/auth'
 import { ElmAppAdapter } from './helpers/elm-app-adapter'
 
