@@ -119,7 +119,7 @@ view model =
 loginStatus : Model -> Html Msg
 loginStatus model =
   case model.login of
-    Checking  -> text "Checking Login Status..."
+    Checking  -> section [ class "section"] [text "Checking Login Status..."]
     LoggedOut -> loggedOutView model
     LoggedIn  -> loggedInView model
     

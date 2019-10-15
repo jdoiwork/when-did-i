@@ -9,7 +9,7 @@ topNav : Html a
 topNav =
   nav
     -- attrs
-    [ class "navbar"
+    [ class "navbar is-transparent is-fixed-top"
     , attribute "role" "navigation"
     , attribute "aria-label" "main navigation"
     ]

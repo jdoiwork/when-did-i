@@ -16,18 +16,21 @@ type Msg
 login : Html Msg
 login =
   section
-    [ class "section has-background-light"]
-    [ h1 [ class "title"] [ text "Login with"]
-    , div
-        [ class "columns"]
-        [ button [ buttonClass, onClick <| LoginWith Google] [text "Google"]
-        , button [ buttonClass, disabled True] [text "Facebook"]
-        , button [ buttonClass, disabled True] [text "Twitter"]
-        , button [ buttonClass, disabled True] [text "Github"]
+    [ class "section"]
+    [ div [class "container"]
+      [ h1 [ class "title"] [ text "Login with"]
+      , div
+          [ class "columns"]
+          [ button [ buttonClass, onClick <| LoginWith Google] [text "Google"]
+          , button [ buttonClass, disabled True] [text "Facebook"]
+          , button [ buttonClass, disabled True] [text "Twitter"]
+          , button [ buttonClass, disabled True] [text "Github"]
 
 
-        ]
+          ]
+    ]]
 
-    ]
+
+    
   
 buttonClass = class "button is-large is-fullwidth"
