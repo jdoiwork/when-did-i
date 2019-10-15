@@ -27,8 +27,11 @@ welcome =
               , class "has-text-centered"
               , class "has-text-left-desktop"
               ]
-              [ text "When Did I?" ]
-
+              [ div [] [text "When Did I?"]
+              , div [] [ a [ class "button is-primary is-large", href "/login", style "margin-top" "2em"] [ text "Login"]]
+              ]
             ]
+        ]
+    ]
 
-        ]]
+        

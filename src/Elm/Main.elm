@@ -101,9 +101,12 @@ view : Model -> Browser.Document Msg
 view model =
   { title = "When did I? 🤔"
   , body =
-    [ topNav
-    , div [] [ loginStatus model ]
-    ]
+      case model.login of
+        LoggedOut -> [loggedOutView model]
+        _ ->
+          [ topNav
+          , div [] [ loginStatus model ]
+          ]
   }
   
 loginStatus : Model -> Html Msg
@@ -116,9 +119,7 @@ loginStatus model =
 loggedOutView : Model -> Html Msg
 loggedOutView model =
   div []
-    [ h1 [] [ text "Login"]
-    , button [ class "button", onClick <| LoginWith Google ] [text "Google Login"]
-    , welcome
+    [ welcome
     ]
 
 loggedInView : Model -> Html Msg
