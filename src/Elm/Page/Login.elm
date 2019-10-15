@@ -21,18 +21,26 @@ login =
       [ h1 [ class "title"] [ text "Login with"]
       , div
           [ class "columns"]
-          [ button [ buttonClass, onClick <| LoginWith Google]
-              [ ionIcon "logo-google"
-              , span [] [text " Google"]]
-          , button [ buttonClass, disabled True] [text "Facebook"]
-          , button [ buttonClass, disabled True] [text "Twitter"]
-          , button [ buttonClass, disabled True] [text "Github"]
+          [ button [ buttonClass, onClick <| LoginWith Google] <|
+              iconWithText "logo-google" "Google"
+          , button [ buttonClass, disabled True] <|
+              iconWithText "logo-facebook" "Facebook"
+          , button [ buttonClass, disabled True] <|
+              iconWithText "logo-twitter" "Twitter"
+          , button [ buttonClass, disabled True] <|
+              iconWithText "logo-github" "Github"
 
           -- <i class="material-icons">face</i>
           -- <i class="ion-logo-facebook"></i>
           ]
     ]]
 
+type alias IconName = String
+
+iconWithText : IconName -> String -> List (Html a)
+iconWithText iconName t =
+  [ ionIcon iconName
+  , span [] [text t]]
 
 ionIcon : String -> Html a
 ionIcon ionName = span [ class "icon"] [i [ class <| "ion-" ++ ionName] []]
