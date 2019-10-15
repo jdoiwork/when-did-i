@@ -37,14 +37,7 @@ dummyTasks =
 listView : Html TaskItemMsg
 listView =
   let items = split3 dummyTasks
-  in
-    div
-      [] <|
-      [ text "list view"
-      --, div [ class "tile is-ancester is-vertical"] <| List.map parentTileView items --[a, b, c]
-      
-      ] ++
-        List.map gridListView items
+  in section [class "section"] <| List.map gridListView items
 
 gridListView : List TaskItem -> Html TaskItemMsg
 gridListView xs =
