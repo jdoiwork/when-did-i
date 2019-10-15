@@ -21,16 +21,21 @@ login =
       [ h1 [ class "title"] [ text "Login with"]
       , div
           [ class "columns"]
-          [ button [ buttonClass, onClick <| LoginWith Google] [text "Google"]
+          [ button [ buttonClass, onClick <| LoginWith Google]
+              [ ionIcon "logo-google"
+              , span [] [text " Google"]]
           , button [ buttonClass, disabled True] [text "Facebook"]
           , button [ buttonClass, disabled True] [text "Twitter"]
           , button [ buttonClass, disabled True] [text "Github"]
 
-
+          -- <i class="material-icons">face</i>
+          -- <i class="ion-logo-facebook"></i>
           ]
     ]]
 
 
-    
+ionIcon : String -> Html a
+ionIcon ionName = span [ class "icon"] [i [ class <| "ion-" ++ ionName] []]
+
   
 buttonClass = class "button is-large is-fullwidth"
