@@ -1,6 +1,6 @@
 // import bulma from 'bulma'
 require('bulma')
-import { Elm } from './Main.elm'
+import { Elm } from './Elm/Main.elm'
 import * as auth from './services/auth'
 
 require("./inits/firebase-init").init()
