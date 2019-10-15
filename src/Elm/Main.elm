@@ -102,7 +102,7 @@ view model =
   { title = "When did I? 🤔"
   , body =
     [ topNav
-    , p [] [ loginStatus model ]
+    , div [] [ loginStatus model ]
     ]
   }
   
