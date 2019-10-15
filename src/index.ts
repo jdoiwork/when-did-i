@@ -1,10 +1,9 @@
 // import bulma from 'bulma'
 require('bulma')
 import { Elm } from './Main.elm'
+import * as auth from './services/auth'
 
 require("./inits/firebase-init").init()
-
-const auth = require("./services/auth")
 
 const app = Elm.Main.init({
   //node: document.querySelector('main')
