@@ -76,7 +76,10 @@ update msg model =
                     "login" -> LoggedIn
                     "logout" -> LoggedOut
                     _ -> Checking
-      in ( { model | login = login }, Nav.pushUrl model.key "/" )
+          cmd = if key == "logout" && model.url.path == "/login"
+                  then Cmd.none
+                  else Nav.pushUrl model.key "/"
+      in ( { model | login = login }, cmd )
 
     RequestLogin provider ->
       ( model, loginWith <| E.string "google")
