@@ -11,6 +11,7 @@ import Url
 import Page.Nav exposing (..)
 import Page.Welcome exposing (..)
 import Page.Login
+import Page.TaskList exposing (..)
 
 main : Program () Model Msg
 main =
@@ -49,6 +50,7 @@ type Msg
   | LoginStatusChanged String
   | RequestLogin Page.Login.AuthProvider
   | Logout
+  | Ignore
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -78,6 +80,8 @@ update msg model =
       ( model, loginWith <| E.string "google")
       
     Logout -> (model, logout ())
+
+    Ignore -> (model, Cmd.none)
 -- SUBSCRIPTIONS
 
 port refreshTimer : (String -> msg) -> Sub msg
@@ -129,5 +133,6 @@ loggedInView : Model -> Html Msg
 loggedInView model =
   div []
     [ h1 [] [ text "Hello 😀"]
+    , Html.map (\_ -> Ignore) listView
     , button [ class "button", onClick <| Logout ] [text "Logout"]
     ]

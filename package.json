@@ -9,7 +9,7 @@
     "hello": "😀😀😀😀😀",
     "dev": "parcel src/index.html --hmr-port 8081",
     "build": "parcel build src/index.html src/robots.txt -d public",
-    "clean": "rm -rf dist .cache",
+    "clean": "rm -rf dist .cache elm-stuff",
     "type-check": "yarn tsc src/index.ts -w --noEmit",
     "deploy": "firebase deploy"
   },
