@@ -6,6 +6,7 @@
   "author": "jdoi <jdoi.work@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "hello": "😀😀😀😀😀",
     "dev": "parcel src/index.html --hmr-port 8081",
     "build": "parcel build src/index.html src/robots.txt -d public",
     "clean": "rm -rf dist .cache",
