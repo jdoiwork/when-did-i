@@ -1,7 +1,6 @@
 
-var firebase = require("firebase/app")
-
-require("firebase/auth")
+import * as firebase from 'firebase/app'
+import 'firebase/auth'
 
 const providers = {
   google: new firebase.auth.GoogleAuthProvider(),
@@ -20,7 +19,7 @@ function logError(error) {
     console.error("error", error)
 }
 
-async function signIn() {
+async function signIn() : Promise<void> {
     try {
         const result = await firebase.auth().signInWithPopup(providers.google)
         // This gives you a Google Access Token. You can use it to access the Google API.
@@ -37,7 +36,9 @@ async function signIn() {
     }
 }
 
-function subscribe(callback) {
+type UserCallback = (user: firebase.User | null) => void;
+
+function subscribe(callback: UserCallback) {
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
           // User is signed in.
@@ -51,7 +52,7 @@ function subscribe(callback) {
     })
 }
 
-function signOut() {
+function signOut() : void {
     firebase.auth().signOut().catch(logError)
 }
 
