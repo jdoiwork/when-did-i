@@ -69,12 +69,36 @@ itemCardView item =
         [ text "2019/10/16 12:34:56"]
     , footer
         [ class "card-footer"]
-        [ a [ class "card-footer-item", onClick <| Delete item.uid ] [ text "delete"]
-        , a [ class "card-footer-item", onClick <| Delete item.uid ] [ text "Edit"]
-        , a [ class "card-footer-item", onClick <| Delete item.uid ] [ text "Done Again!"]
+        -- [ a [ class "card-footer-item", onClick <| Delete item.uid ] [ text "delete"]
+        -- , p [ class "card-footer-item" ]
+        --     [a [class "button is-fullwidth"] [ text "delete"]]
+        -- , a [ class "card-footer-item", onClick <| Delete item.uid ] [ text "Edit"]
+        -- , a [ class "card-footer-item", onClick <| Delete item.uid ] [ text "Done Again!"]
+        -- ]
+        [ p
+            [ class "card-footer"]
+            [ p
+                [ class "buttons"]
+                -- [ actionButton "ios-trash" [ class "is-danger"] ""
+                -- , actionButton "ios-create" [ class "is-info"] ""
+                -- , actionButton "ios-checkmark-circle-outline" [ class "is-primary"] "Done"
+                -- ]
+                [ actionButton "ios-checkmark-circle-outline" [ class "is-primary"] "Done"
+                ]
+
+            ]
         ]
     ]
 
+actionButton : String -> List (Attribute a) -> String -> Html a
+actionButton iconName attrs content =
+  button
+    ([ class "button" ] ++ attrs)
+    [ span
+        [ class "icon is-large" ]
+        [ i [class "icon", class <| "ion-" ++ iconName] []]
+    , span [] [ text content]
+    ]
 type alias ItemTuple a = (List a, List a, List a)
 
 -- split3 : List a -> ItemTuple a
