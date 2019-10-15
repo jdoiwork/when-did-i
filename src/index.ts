@@ -1,31 +1,24 @@
-// import bulma from 'bulma'
-require('bulma')
-import { Elm } from './Elm/Main.elm'
+import 'bulma'
 import * as auth from './services/auth'
+import { ElmAppAdapter } from './helpers/elm-app-adapter'
 
 require("./inits/firebase-init").init()
 
-const app = Elm.Main.init({
-  //node: document.querySelector('main')
-})
+const app = new ElmAppAdapter({})
 
-console.log("hello typescript")
-console.log(app)
-
-app.ports.loginWith.subscribe(provider => {
+app.loginWith(provider => {
   console.log(`${provider} login`)
   auth.signIn()
 })
 
 auth.subscribe((user) => {
   const status = user ? "login" : "logout"
-  app.ports.loginStatusChanged.send(status)
+  app.loginStatusChanged(status)
 })
 
-app.ports.logout.subscribe(() => {
+app.logout(() => {
   console.log("logout")
   auth.signOut()
 })
-
 
 window["app"] = app
