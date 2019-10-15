@@ -10,6 +10,7 @@ import Url
 
 import Page.Nav exposing (..)
 import Page.Welcome exposing (..)
+import Page.Login exposing (..)
 
 main : Program () Model Msg
 main =
@@ -101,18 +102,24 @@ view : Model -> Browser.Document Msg
 view model =
   { title = "When did I? 🤔"
   , body =
-      case model.login of
-        LoggedOut -> [loggedOutView model]
-        _ ->
+      case model.url.path of
+        "/login" ->
           [ topNav
-          , div [] [ loginStatus model ]
+          , login
+
           ]
+        _ -> case model.login of
+              LoggedOut -> [loggedOutView model]
+              _ ->
+                [ topNav
+                , div [] [ loginStatus model ]
+                ]
   }
   
 loginStatus : Model -> Html Msg
 loginStatus model =
   case model.login of
-    Checking  -> text "Checking..."
+    Checking  -> text "Checking Login Status..."
     LoggedOut -> loggedOutView model
     LoggedIn  -> loggedInView model
     
