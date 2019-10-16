@@ -1,4 +1,10 @@
-module Page.TaskList exposing (listView, TaskListModel, taskListInit)
+module Page.TaskList exposing
+  ( listView
+  , TaskListModel
+  , taskListInit
+  , taskListUpdate
+  , TaskListMsg(..)
+  )
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -38,9 +44,13 @@ dummyTasks =
   , { uid = "edf", title = "bbb 12", lastUpdated = millisToPosix 1}
   ]
 
-updateTaskList : TaskListModel -> TaskListMsg -> (TaskListModel, Cmd TaskListMsg)
-updateTaskList model msg =
-  (model, Cmd.none)
+taskListUpdate : TaskListModel -> TaskListMsg -> (TaskListModel, Cmd TaskListMsg)
+taskListUpdate model msg =
+  case msg of
+    CreatedItem newItem ->
+      let newItems = newItem :: model.items
+      in ({ items = newItems, splitedItems = split3 newItems}, Cmd.none)
+    _ -> (model, Cmd.none)
 
 listView : TaskListModel -> Html TaskListMsg
 listView model =

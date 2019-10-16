@@ -103,7 +103,9 @@ update msg model =
     CreatedNewItem resultNewItem ->
       case resultNewItem of
         Err error -> (model, Cmd.none)
-        Ok newItem -> (model, Cmd.none)
+        Ok newItem ->
+          let (taskListState, _) = taskListUpdate model.taskListState <| CreatedItem newItem
+          in (model, Cmd.none)
 
     ClickBody ->
       let (navModel, _) = navUpdate ClickOutSideNav model.topNavState
