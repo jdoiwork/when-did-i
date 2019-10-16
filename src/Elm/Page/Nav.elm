@@ -5,7 +5,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
 type NavMsg = Logout
-            | ToggleISActive
+            | ToggleIsActive
 
 type alias NavModel =
   { isActive : Bool
@@ -17,7 +17,7 @@ navInit = { isActive = False }
 navUpdate : NavMsg -> NavModel -> (NavModel, Cmd NavMsg)
 navUpdate msg model =
   case msg of
-    ToggleISActive -> ({model | isActive = not model.isActive}, Cmd.none)
+    ToggleIsActive -> ({model | isActive = not model.isActive}, Cmd.none)
     _ -> (model, Cmd.none)
 
 topNavView : NavModel -> Html NavMsg
@@ -35,11 +35,14 @@ topNavView model =
             [ class "navbar-item", class "title", href "/" ]
             [ text "🤔 When did I? "]
         , a
-            [ class "navbar-burger burger"]
+            [ class "navbar-burger burger"
+            , classList [("is-active", model.isActive)]
+            , onClick ToggleIsActive
+            ]
             [ span [][], span [][], span [][]]
         ]
     , div
-        [ class "navbar-menu"]
+        [ class "navbar-menu", classList [("is-active", model.isActive)]]
         [ navbarMenuEndView ]
     ]
 

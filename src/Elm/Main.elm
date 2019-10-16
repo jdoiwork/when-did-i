@@ -86,11 +86,10 @@ update msg model =
     RequestLogin provider ->
       ( model, loginWith <| E.string "google")
       
-    -- RequestLogout -> (model, logout ())
     RequestTopNavMsg navMsg ->
       case navMsg of
-        Logout -> (model, logout ())
-        ToggleISActive ->
+        Logout -> ({model | topNavState = navInit }, logout ())
+        ToggleIsActive ->
           let (navModel, _) = navUpdate navMsg model.topNavState
           in ({model | topNavState = navModel}, Cmd.none)
 
