@@ -4,16 +4,8 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
-
 topNav : Html a
 topNav =
-  div []
-    [ topNavX
-    --, topNavY
-    ]
-
-topNavX : Html a
-topNavX =
   nav
     -- attrs
     [ class "navbar is-transparent is-fixed-top"
@@ -27,22 +19,21 @@ topNavX =
             [ class "navbar-item", class "title", href "/" ]
             [ text "🤔 When did I? "]
         ]
-
+    , div
+        [ class "navbar-menu"]
+        [ navbarMenuEndView ]
     ]
 
-topNavY : Html a
-topNavY =
-  nav
-    -- attrs
-    [ class "navbar is-transparent "
-    , attribute "role" "navigation"
-    , attribute "aria-label" "main navigation"
-    , style "visibility" "hidden"
-    ]
-    -- elements
+navbarMenuEndView : Html a
+navbarMenuEndView =
+  div
+    [ class "navbar-end"]
     [ div
-        [ class "navbar-brand" ]
-        [ 
+        [ class "navbar-item"]
+        [ div
+            [ class "buttons"]
+            [ a [ class "button"] [ text "Logout"]]
         ]
+
 
     ]
