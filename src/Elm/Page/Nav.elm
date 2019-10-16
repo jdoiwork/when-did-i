@@ -20,8 +20,8 @@ navUpdate msg model =
     ToggleISActive -> ({model | isActive = not model.isActive}, Cmd.none)
     _ -> (model, Cmd.none)
 
-topNavView : Html NavMsg
-topNavView =
+topNavView : NavModel -> Html NavMsg
+topNavView model =
   nav
     -- attrs
     [ class "navbar is-transparent is-fixed-top"

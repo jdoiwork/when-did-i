@@ -117,14 +117,14 @@ view model =
   , body =
       case model.url.path of
         "/login" ->
-          [ Html.map RequestTopNavMsg topNavView
+          [ Html.map RequestTopNavMsg <| topNavView model.topNavState
           , Html.map (\(Page.Login.LoginWith p) -> RequestLogin p) Page.Login.login
 
           ]
         _ -> case model.login of
               LoggedOut -> [loggedOutView model]
               _ ->
-                [ Html.map RequestTopNavMsg topNavView
+                [ Html.map RequestTopNavMsg <| topNavView model.topNavState
                 , div [] [ loginStatus model ]
                 ]
   }
