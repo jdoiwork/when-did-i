@@ -39,8 +39,7 @@ dummyTasks =
 
 listView : TaskListModel -> Html TaskItemMsg
 listView model =
-  let items = split3 dummyTasks
-  in section [class "section"] <| List.map gridListView items
+  section [class "section"] <| List.map gridListView model.splitedItems
 
 gridListView : List TaskItem -> Html TaskItemMsg
 gridListView xs =
