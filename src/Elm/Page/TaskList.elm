@@ -87,7 +87,10 @@ itemCardView item =
         [ class "card-content"]
         [ text "2019/10/16 12:34:56"]
     , footer
-        [ class "card-footer", style "justify-content" "center"]
+        [ class "card-footer"
+        , style "justify-content" "center"
+        
+        ]
         -- [ a [ class "card-footer-item", onClick <| Delete item.uid ] [ text "delete"]
         -- , p [ class "card-footer-item" ]
         --     [a [class "button is-fullwidth"] [ text "delete"]]
@@ -95,7 +98,7 @@ itemCardView item =
         -- , a [ class "card-footer-item", onClick <| Delete item.uid ] [ text "Done Again!"]
         -- ]
         [ p
-            [ class "card-footer"]
+            [ class "card-footer-item", style "padding" "5px 0"]
             [ div
                 [ class "buttons"]
                 -- [ actionButton "ios-trash" [ class "is-danger"] ""
