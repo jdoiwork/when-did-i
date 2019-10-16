@@ -22,7 +22,7 @@ navUpdate msg model =
   case msg of
     ToggleIsActive -> ({model | isActive = not model.isActive}, Cmd.none)
     ClickOutSideNav -> ({model | isActive = False}, Cmd.none)
-    InputDidItNow didItNow -> ({model | didItNow = (Debug.log "update didItNow" didItNow)}, Cmd.none)
+    InputDidItNow didItNow -> ({model | didItNow = didItNow}, Cmd.none)
     _ -> (model, Cmd.none)
 
 topNavView : NavModel -> Html NavMsg
@@ -99,8 +99,7 @@ navbarMenuStartView model =
                 ]
             , div
                 [ class "control"]
-                [ a [ class "button is-primary", onClick Logout, disabled <| model.didItNow == ""] [ text "Did it Now! 🤩"]
-                , text (Debug.log "didItNow" model.didItNow)
+                [ button [ class "button is-primary", onClick Logout, disabled <| model.didItNow == ""] [ text "Did it Now! 🤩"]
                 ]
             ]
         ]
