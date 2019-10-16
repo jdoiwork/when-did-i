@@ -4,7 +4,9 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
-topNav : Html a
+type NavMsg = Logout
+
+topNav : Html NavMsg
 topNav =
   nav
     -- attrs
@@ -27,7 +29,7 @@ topNav =
         [ navbarMenuEndView ]
     ]
 
-navbarMenuEndView : Html a
+navbarMenuEndView : Html NavMsg
 navbarMenuEndView =
   div
     [ class "navbar-end"]
@@ -35,7 +37,7 @@ navbarMenuEndView =
         [ class "navbar-item"]
         [ div
             [ class "buttons"]
-            [ a [ class "button"] [ text "Logout"]]
+            [ a [ class "button", onClick Logout] [ text "Logout"]]
         ]
 
 

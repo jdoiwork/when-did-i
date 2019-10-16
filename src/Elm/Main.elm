@@ -49,7 +49,7 @@ type Msg
   | UrlChanged Url.Url
   | LoginStatusChanged String
   | RequestLogin Page.Login.AuthProvider
-  | Logout
+  | RequestLogout
   | Ignore
 
 
@@ -84,7 +84,7 @@ update msg model =
     RequestLogin provider ->
       ( model, loginWith <| E.string "google")
       
-    Logout -> (model, logout ())
+    RequestLogout -> (model, logout ())
 
     Ignore -> (model, Cmd.none)
 -- SUBSCRIPTIONS
@@ -109,14 +109,14 @@ view model =
   , body =
       case model.url.path of
         "/login" ->
-          [ topNav
+          [ Html.map (\_ -> RequestLogout) topNav
           , Html.map (\(Page.Login.LoginWith p) -> RequestLogin p) Page.Login.login
 
           ]
         _ -> case model.login of
               LoggedOut -> [loggedOutView model]
               _ ->
-                [ topNav
+                [ Html.map (\_ -> RequestLogout) topNav
                 , div [] [ loginStatus model ]
                 ]
   }
@@ -138,5 +138,5 @@ loggedInView : Model -> Html Msg
 loggedInView model =
   div []
     [ Html.map (\_ -> Ignore) listView
-    , button [ class "button", onClick <| Logout ] [text "Logout"]
+    --, button [ class "button", onClick <| RequestLogout ] [text "Logout"]
     ]
