@@ -2,7 +2,7 @@
 interface TaskItem {
   uid: string;
   title: string;
-  posix: number;
+  lastUpdated: number;
 }
 
 async function postItem(title: string) : Promise<TaskItem> {
@@ -10,7 +10,7 @@ async function postItem(title: string) : Promise<TaskItem> {
   return {
     uid: dt.toString(),
     title: title,
-    posix: dt,
+    lastUpdated: dt,
   }
 }
 

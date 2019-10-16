@@ -6,12 +6,15 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Encode as E
+import Json.Decode as D
 import Url
 
 import Page.Nav exposing (..)
 import Page.Welcome exposing (..)
 import Page.Login
 import Page.TaskList exposing (..)
+
+import Model.TaskItem exposing (..)
 
 main : Program () Model Msg
 main =
@@ -52,6 +55,7 @@ type Msg
   | RequestLogin Page.Login.AuthProvider
   | RequestTopNavMsg NavMsg
   | PostNewItem String
+  | CreatedNewItem (Result D.Error TaskItem)
   | ClickBody
   | Ignore
 
@@ -95,6 +99,11 @@ update msg model =
           in ({model | topNavState = navModel}, Cmd.none)
     PostNewItem didItNow ->
       (model, postNewItem model.topNavState.didItNow)
+    CreatedNewItem resultNewItem ->
+      case resultNewItem of
+        Err error -> (model, Cmd.none)
+        Ok newItem -> (model, Cmd.none)
+
     ClickBody ->
       let (navModel, _) = navUpdate ClickOutSideNav model.topNavState
       in ({model | topNavState = navModel}, Cmd.none)
@@ -107,12 +116,18 @@ port loginStatusChanged : (String -> msg) -> Sub msg
 port loginWith : E.Value -> Cmd msg
 port logout : () -> Cmd msg
 port postNewItem : String -> Cmd msg
+port createdNewItem : (D.Value -> msg) -> Sub msg
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.batch
     [ loginStatusChanged LoginStatusChanged
+    , createdNewItem convertNewItemWithValue
     ]
+
+convertNewItemWithValue : D.Value -> Msg
+convertNewItemWithValue value = value |> decodeTaskItem |> CreatedNewItem
 
 -- VIEWS
 

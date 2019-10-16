@@ -5,13 +5,8 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Time exposing (..)
 
-type alias TaskItem =
-  { uid: Uid
-  , title: String
-  , lastUpdated: Posix
-  }
+import Model.TaskItem exposing (..)
 
-type alias Uid = String
 
 type TaskItemMsg = Delete Uid
                  | Edit Uid
