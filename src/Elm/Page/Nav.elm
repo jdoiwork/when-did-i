@@ -1,13 +1,27 @@
-module Page.Nav exposing (topNav)
+module Page.Nav exposing (topNavView, navInit, navUpdate, NavModel, NavMsg(..))
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
 type NavMsg = Logout
+            | ToggleISActive
 
-topNav : Html NavMsg
-topNav =
+type alias NavModel =
+  { isActive : Bool
+  }
+
+navInit : NavModel
+navInit = { isActive = False }
+
+navUpdate : NavMsg -> NavModel -> (NavModel, Cmd NavMsg)
+navUpdate msg model =
+  case msg of
+    ToggleISActive -> ({model | isActive = not model.isActive}, Cmd.none)
+    _ -> (model, Cmd.none)
+
+topNavView : Html NavMsg
+topNavView =
   nav
     -- attrs
     [ class "navbar is-transparent is-fixed-top"

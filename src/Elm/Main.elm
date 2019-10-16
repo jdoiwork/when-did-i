@@ -33,6 +33,7 @@ type alias Model =
   { key : Nav.Key
   , url : Url.Url
   , login : LoginStatus
+  , topNavState : NavModel
   }
   
 type LoginStatus = Checking
@@ -42,14 +43,15 @@ type LoginStatus = Checking
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
-  ( Model key url Checking, Cmd.none )
+  ( Model key url Checking navInit, Cmd.none )
 
 type Msg
   = LinkClicked Browser.UrlRequest
   | UrlChanged Url.Url
   | LoginStatusChanged String
   | RequestLogin Page.Login.AuthProvider
-  | RequestLogout
+  | RequestTopNavMsg NavMsg
+  -- | RequestLogout
   | Ignore
 
 
@@ -84,7 +86,13 @@ update msg model =
     RequestLogin provider ->
       ( model, loginWith <| E.string "google")
       
-    RequestLogout -> (model, logout ())
+    -- RequestLogout -> (model, logout ())
+    RequestTopNavMsg navMsg ->
+      case navMsg of
+        Logout -> (model, logout ())
+        ToggleISActive ->
+          let (navModel, _) = navUpdate navMsg model.topNavState
+          in ({model | topNavState = navModel}, Cmd.none)
 
     Ignore -> (model, Cmd.none)
 -- SUBSCRIPTIONS
@@ -109,14 +117,14 @@ view model =
   , body =
       case model.url.path of
         "/login" ->
-          [ Html.map (\_ -> RequestLogout) topNav
+          [ Html.map RequestTopNavMsg topNavView
           , Html.map (\(Page.Login.LoginWith p) -> RequestLogin p) Page.Login.login
 
           ]
         _ -> case model.login of
               LoggedOut -> [loggedOutView model]
               _ ->
-                [ Html.map (\_ -> RequestLogout) topNav
+                [ Html.map RequestTopNavMsg topNavView
                 , div [] [ loginStatus model ]
                 ]
   }
