@@ -8,9 +8,10 @@ import Time exposing (..)
 import Model.TaskItem exposing (..)
 
 
-type TaskItemMsg = Delete Uid
-                 | Edit Uid
-                 | DoneAgain Uid
+type TaskListMsg = DeleteItem Uid
+                 | EditItem Uid
+                 | DidItItem Uid
+                 | CreatedItem TaskItem
 
 type alias TaskListModel =
   { items : List TaskItem
@@ -37,29 +38,33 @@ dummyTasks =
   , { uid = "edf", title = "bbb 12", lastUpdated = millisToPosix 1}
   ]
 
-listView : TaskListModel -> Html TaskItemMsg
+updateTaskList : TaskListModel -> TaskListMsg -> (TaskListModel, Cmd TaskListMsg)
+updateTaskList model msg =
+  (model, Cmd.none)
+
+listView : TaskListModel -> Html TaskListMsg
 listView model =
   section [class "section"] <| List.map gridListView model.splitedItems
 
-gridListView : List TaskItem -> Html TaskItemMsg
+gridListView : List TaskItem -> Html TaskListMsg
 gridListView xs =
   div [ class "container"]
     [div [ class "columns" ] <| List.map columnView xs]
   
 
-columnView : TaskItem -> Html TaskItemMsg
+columnView : TaskItem -> Html TaskListMsg
 columnView item =
   div [ class "column is-4"] [itemView item]
 
-parentTileView : List TaskItem -> Html TaskItemMsg
+parentTileView : List TaskItem -> Html TaskListMsg
 parentTileView items =
   div [class "tile is-parent is-vertical_"] <| List.map itemView items
 
-itemView : TaskItem -> Html TaskItemMsg
+itemView : TaskItem -> Html TaskListMsg
 itemView item =
   div [class "tile is-child box_"] [itemCardView item]
 
-itemCardView : TaskItem -> Html TaskItemMsg
+itemCardView : TaskItem -> Html TaskListMsg
 itemCardView item =
   div
     [ class "card", id item.uid ]
