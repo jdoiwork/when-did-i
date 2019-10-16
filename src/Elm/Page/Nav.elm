@@ -95,7 +95,7 @@ navbarMenuStartView model =
             [ div
                 [ class "control is-expanded"]
                 [ input
-                    [class "input", type_ "text", onInput InputDidItNow ]
+                    [class "input", type_ "text", onInput InputDidItNow, value model.didItNow ]
                     []
                 ]
             , div
