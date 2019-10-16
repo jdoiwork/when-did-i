@@ -32,9 +32,9 @@ topNavView model =
     ]
     -- elements
     [ div
-        [ class "navbar-brand" ]
+        [ class "navbar-brand"]
         [ a
-            [ class "navbar-item", class "title", href "/" ]
+            [ class "navbar-item", class "title", href "/", style "margin-bottom" "0.2em" ]
             [ text "🤔 When did I? "]
         , a
             [ class "navbar-burger burger"
