@@ -87,7 +87,7 @@ itemCardView item =
         [ class "card-content"]
         [ text "2019/10/16 12:34:56"]
     , footer
-        [ class "card-footer"]
+        [ class "card-footer", style "justify-content" "center"]
         -- [ a [ class "card-footer-item", onClick <| Delete item.uid ] [ text "delete"]
         -- , p [ class "card-footer-item" ]
         --     [a [class "button is-fullwidth"] [ text "delete"]]
@@ -96,7 +96,7 @@ itemCardView item =
         -- ]
         [ p
             [ class "card-footer"]
-            [ p
+            [ div
                 [ class "buttons"]
                 -- [ actionButton "ios-trash" [ class "is-danger"] ""
                 -- , actionButton "ios-create" [ class "is-info"] ""
@@ -112,7 +112,7 @@ itemCardView item =
 actionButton : String -> List (Attribute a) -> String -> Html a
 actionButton iconName attrs content =
   button
-    ([ class "button is-rounded" ] ++ attrs)
+    ([ class "button is-rounded is-small" ] ++ attrs)
     [ span
         [ class "icon is-large" ]
         [ i [class "icon", class <| "ion-" ++ iconName] []]
