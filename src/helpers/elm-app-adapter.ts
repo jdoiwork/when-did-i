@@ -30,4 +30,8 @@ export class ElmAppAdapter {
     logout(callback: () => void) {
         this.app.ports.logout.subscribe(callback)
     }
+
+    postNewItem(callback: (text: string) => void) {
+        this.app.ports.postNewItem.subscribe(callback)
+    }
 }

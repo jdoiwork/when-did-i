@@ -21,4 +21,8 @@ app.logout(() => {
   auth.signOut()
 })
 
+app.postNewItem(text => {
+  console.log(text)
+})
+
 window["app"] = app

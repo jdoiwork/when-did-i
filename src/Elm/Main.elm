@@ -94,7 +94,7 @@ update msg model =
           let (navModel, _) = navUpdate navMsg model.topNavState
           in ({model | topNavState = navModel}, Cmd.none)
     PostNewItem didItNow ->
-      (model, Cmd.none)
+      (model, postNewItem model.topNavState.didItNow)
     ClickBody ->
       let (navModel, _) = navUpdate ClickOutSideNav model.topNavState
       in ({model | topNavState = navModel}, Cmd.none)
@@ -106,6 +106,7 @@ port refreshTimer : (String -> msg) -> Sub msg
 port loginStatusChanged : (String -> msg) -> Sub msg
 port loginWith : E.Value -> Cmd msg
 port logout : () -> Cmd msg
+port postNewItem : String -> Cmd msg
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
