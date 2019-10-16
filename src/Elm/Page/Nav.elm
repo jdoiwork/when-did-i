@@ -6,6 +6,7 @@ import Html.Events exposing (..)
 
 type NavMsg = Logout
             | ToggleIsActive
+            | ClickOutSideNav
 
 type alias NavModel =
   { isActive : Bool
@@ -18,6 +19,7 @@ navUpdate : NavMsg -> NavModel -> (NavModel, Cmd NavMsg)
 navUpdate msg model =
   case msg of
     ToggleIsActive -> ({model | isActive = not model.isActive}, Cmd.none)
+    ClickOutSideNav -> ({model | isActive = False}, Cmd.none)
     _ -> (model, Cmd.none)
 
 topNavView : NavModel -> Html NavMsg

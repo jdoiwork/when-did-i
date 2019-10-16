@@ -52,6 +52,7 @@ type Msg
   | RequestLogin Page.Login.AuthProvider
   | RequestTopNavMsg NavMsg
   -- | RequestLogout
+  | ClickBody
   | Ignore
 
 
@@ -92,7 +93,11 @@ update msg model =
         ToggleIsActive ->
           let (navModel, _) = navUpdate navMsg model.topNavState
           in ({model | topNavState = navModel}, Cmd.none)
+        _ -> (model, Cmd.none)
 
+    ClickBody ->
+      let (navModel, _) = navUpdate ClickOutSideNav model.topNavState
+      in ({model | topNavState = navModel}, Cmd.none)
     Ignore -> (model, Cmd.none)
 -- SUBSCRIPTIONS
 
@@ -124,7 +129,7 @@ view model =
               LoggedOut -> [loggedOutView model]
               _ ->
                 [ Html.map RequestTopNavMsg <| topNavView model.topNavState
-                , div [] [ loginStatus model ]
+                , div [onClick ClickBody] [ loginStatus model ]
                 ]
   }
   
