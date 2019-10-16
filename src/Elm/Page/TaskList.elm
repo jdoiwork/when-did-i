@@ -105,7 +105,7 @@ itemCardView item =
                 -- , actionButton "ios-create" [ class "is-info"] ""
                 -- , actionButton "ios-checkmark-circle-outline" [ class "is-primary"] "Done"
                 -- ]
-                [ actionButton "ios-checkmark-circle-outline" [ class "is-primary"] "Done"
+                [ actionButton "ios-checkmark-circle-outline" [ class "is-primary"] "More"
                 ]
 
             ]
