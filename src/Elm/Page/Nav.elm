@@ -8,6 +8,7 @@ type NavMsg = Logout
             | ToggleIsActive
             | InputDidItNow String
             | ClickOutSideNav
+            | CreateItem String
 
 type alias NavModel =
   { isActive : Bool
@@ -99,7 +100,12 @@ navbarMenuStartView model =
                 ]
             , div
                 [ class "control"]
-                [ button [ class "button is-primary", onClick Logout, disabled <| model.didItNow == ""] [ text "Did it Now! 🤩"]
+                [ button
+                    [ class "button is-primary"
+                    , onClick <| CreateItem model.didItNow
+                    , disabled <| model.didItNow == ""
+                    ]
+                    [ text "Did it Now! 🤩"]
                 ]
             ]
         ]

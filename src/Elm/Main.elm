@@ -51,7 +51,7 @@ type Msg
   | LoginStatusChanged String
   | RequestLogin Page.Login.AuthProvider
   | RequestTopNavMsg NavMsg
-  -- | RequestLogout
+  | PostNewItem String
   | ClickBody
   | Ignore
 
@@ -93,7 +93,8 @@ update msg model =
         _ ->
           let (navModel, _) = navUpdate navMsg model.topNavState
           in ({model | topNavState = navModel}, Cmd.none)
-
+    PostNewItem didItNow ->
+      (model, Cmd.none)
     ClickBody ->
       let (navModel, _) = navUpdate ClickOutSideNav model.topNavState
       in ({model | topNavState = navModel}, Cmd.none)
@@ -120,19 +121,29 @@ view model =
   , body =
       case model.url.path of
         "/login" ->
-          [ Html.map RequestTopNavMsg <| topNavView model.topNavState
+          [ mapNavView model topNavView
           , Html.map (\(Page.Login.LoginWith p) -> RequestLogin p) Page.Login.login
 
           ]
         _ -> case model.login of
               LoggedOut -> [loggedOutView model]
               _ ->
-                [ Html.map RequestTopNavMsg <| topNavView model.topNavState
+                [ mapNavView model topNavView
                 , div [onClick ClickBody] [ loginStatus model ]
-                , Html.map RequestTopNavMsg <| bottomNavView model.topNavState
+                , mapNavView model bottomNavView
                 ]
   }
-  
+
+mapNavView : Model -> (NavModel -> Html NavMsg) -> Html Msg
+mapNavView model navView =
+  Html.map convertNavMsg <| navView model.topNavState
+
+convertNavMsg : NavMsg -> Msg
+convertNavMsg nav =
+  case nav of
+    CreateItem didItNow -> PostNewItem didItNow
+    _ -> RequestTopNavMsg nav
+
 loginStatus : Model -> Html Msg
 loginStatus model =
   case model.login of
