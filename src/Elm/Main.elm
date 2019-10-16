@@ -130,6 +130,7 @@ view model =
               _ ->
                 [ Html.map RequestTopNavMsg <| topNavView model.topNavState
                 , div [onClick ClickBody] [ loginStatus model ]
+                , Html.map RequestTopNavMsg <| bottomNavView model.topNavState
                 ]
   }
   
