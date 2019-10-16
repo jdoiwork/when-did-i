@@ -1,7 +1,7 @@
 module Page.Nav exposing (topNavView, bottomNavView, navInit, navUpdate, NavModel, NavMsg(..))
 
 import Html exposing (..)
-import Html.Attributes exposing (..)
+import Html.Attributes exposing (class, style, href, attribute, classList, disabled, value, type_)
 import Html.Events exposing (..)
 
 type NavMsg = Logout
@@ -82,16 +82,25 @@ bottomNavView model =
     [ div
         -- [ class "navbar-menu", classList [("is-active", model.isActive)]]
         [ class "navbar-menu is-active", style "justify-content" "stretch" ]
-        [ navbarMenuStartView model]
+        [ form
+            [ class "form", styleWidth100
+            , onSubmit <| CreateItem model.didItNow
+            ]
+            [ navbarMenuStartView model
+            ]
+        ]
     ]
+
+styleWidth100 = style "width" "100%"
+
 navbarMenuStartView : NavModel -> Html NavMsg
 navbarMenuStartView model =
   div
-    [ class "navbar-start", style "width" "100%"]
+    [ class "navbar-start", styleWidth100]
     [ div
-        [ class "navbar-item", style "width" "100%"]
+        [ class "navbar-item", styleWidth100]
         [ div
-            [ class "field has-addons", style "width" "100%"]
+            [ class "field has-addons", styleWidth100]
             [ div
                 [ class "control is-expanded"]
                 [ input
@@ -102,8 +111,8 @@ navbarMenuStartView model =
                 [ class "control"]
                 [ button
                     [ class "button is-primary"
-                    , onClick <| CreateItem model.didItNow
                     , disabled <| model.didItNow == ""
+                    , type_ "submit"
                     ]
                     [ text "Did it Now! 🤩"]
                 ]
