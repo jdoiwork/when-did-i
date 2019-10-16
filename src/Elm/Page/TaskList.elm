@@ -95,7 +95,7 @@ itemCardView item =
 actionButton : String -> List (Attribute a) -> String -> Html a
 actionButton iconName attrs content =
   button
-    ([ class "button" ] ++ attrs)
+    ([ class "button is-rounded" ] ++ attrs)
     [ span
         [ class "icon is-large" ]
         [ i [class "icon", class <| "ion-" ++ iconName] []]
