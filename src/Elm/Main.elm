@@ -141,7 +141,7 @@ view model =
   , body =
       case model.url.path of
         "/login" ->
-          [ mapNavView model topNavView
+          [ mapNavView model topNavViewWithoutFixed
           , Html.map (\(Page.Login.LoginWith p) -> RequestLogin p) Page.Login.login
 
           ]

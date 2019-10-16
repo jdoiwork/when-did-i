@@ -16,6 +16,13 @@ app.loginWith(provider => {
 auth.subscribe((user) => {
   const status = user ? "login" : "logout"
   app.loginStatusChanged(status)
+  if (user) {
+    document.body.classList.add('login')
+  }
+  else {
+    document.body.classList.remove('login')
+
+  }
 })
 
 app.logout(() => {

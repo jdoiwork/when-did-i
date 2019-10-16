@@ -1,4 +1,4 @@
-module Page.Nav exposing (topNavView, bottomNavView, navInit, navUpdate, NavModel, NavMsg(..))
+module Page.Nav exposing (topNavView, topNavViewWithoutFixed, bottomNavView, navInit, navUpdate, NavModel, NavMsg(..))
 
 import Html exposing (..)
 import Html.Attributes exposing (class, style, href, attribute, classList, disabled, value, type_)
@@ -27,10 +27,17 @@ navUpdate msg model =
     _ -> (model, Cmd.none)
 
 topNavView : NavModel -> Html NavMsg
-topNavView model =
+topNavView = topNavViewCore True
+
+topNavViewWithoutFixed : NavModel -> Html NavMsg
+topNavViewWithoutFixed = topNavViewCore False
+
+topNavViewCore : Bool -> NavModel -> Html NavMsg
+topNavViewCore isFixed model =
   nav
     -- attrs
-    [ class "navbar is-transparent is-fixed-top"
+    [ class "navbar is-transparent"
+    , classList [("is-fixed-top", isFixed)]
     , attribute "role" "navigation"
     , attribute "aria-label" "main navigation"
     ]
@@ -49,9 +56,12 @@ topNavView model =
         ]
     , div
         -- [ class "navbar-menu", classList [("is-active", model.isActive)]]
-        [ class "navbar-menu", classIsActive model ]
+        [ class "navbar-menu", classIsActive model, classList [("is-hidden", not isFixed)] ]
         [ navbarMenuEndView ]
     ]
+
+
+
 
 classIsActive : NavModel -> Attribute NavMsg
 classIsActive model = classList [("is-active", model.isActive)]

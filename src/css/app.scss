@@ -3,5 +3,10 @@
 body {
   background: $light;
   min-height: 100vh;
-  padding-top: $navbar-height;
+  // padding-top: $navbar-height;
+  &.login {
+    @extend .has-navbar-fixed-top;
+    @extend .has-navbar-fixed-bottom;
+  
+  }
 }
