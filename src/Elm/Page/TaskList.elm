@@ -14,11 +14,11 @@ type TaskItemMsg = Delete Uid
 
 type alias TaskListModel =
   { items : List TaskItem
-
+  , splitedItems : List (List TaskItem)
   }
 
 taskListInit : TaskListModel
-taskListInit = { items = dummyTasks }
+taskListInit = { items = dummyTasks, splitedItems = split3 dummyTasks }
 
 dummyTasks : List TaskItem
 dummyTasks = 
@@ -37,8 +37,8 @@ dummyTasks =
   , { uid = "edf", title = "bbb 12", lastUpdated = millisToPosix 1}
   ]
 
-listView : Html TaskItemMsg
-listView =
+listView : TaskListModel -> Html TaskItemMsg
+listView model =
   let items = split3 dummyTasks
   in section [class "section"] <| List.map gridListView items
 

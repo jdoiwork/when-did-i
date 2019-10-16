@@ -177,6 +177,6 @@ loggedOutView model =
 loggedInView : Model -> Html Msg
 loggedInView model =
   div []
-    [ Html.map (\_ -> Ignore) listView
+    [ Html.map (\_ -> Ignore) <| listView model.taskListState
     --, button [ class "button", onClick <| RequestLogout ] [text "Logout"]
     ]
