@@ -113,8 +113,6 @@ update msg model =
     Ignore -> (model, Cmd.none)
 -- SUBSCRIPTIONS
 
-port refreshTimer : (String -> msg) -> Sub msg
-
 port loginStatusChanged : (String -> msg) -> Sub msg
 port loginWith : E.Value -> Cmd msg
 port logout : () -> Cmd msg

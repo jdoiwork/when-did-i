@@ -1,9 +1,6 @@
 
-interface TaskItem {
-  uid: string;
-  title: string;
-  lastUpdated: number;
-}
+
+import { TaskItem } from '../models/task-item'
 
 async function postItem(title: string) : Promise<TaskItem> {
   const dt = Date.now()

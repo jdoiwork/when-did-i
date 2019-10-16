@@ -26,6 +26,7 @@ app.logout(() => {
 app.postNewItem(async title => {
   console.log(title)
   const item = await db.postItem(title)
+  app.createdNewItem(item)
   console.log("new item", item)
 })
 

@@ -1,5 +1,7 @@
 import { Elm } from '../Elm/Main.elm'
 
+import { TaskItem } from '../models/task-item'
+
 interface InitArgs {
     node?: HTMLElement;
     flags?: Flags;
@@ -33,5 +35,10 @@ export class ElmAppAdapter {
 
     postNewItem(callback: (text: string) => void) {
         this.app.ports.postNewItem.subscribe(callback)
+    }
+
+    // createdNewItem
+    createdNewItem(newItem: TaskItem) : void {
+        this.app.ports.createdNewItem.send(newItem)
     }
 }
