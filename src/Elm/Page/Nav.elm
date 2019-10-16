@@ -36,15 +36,19 @@ topNavView model =
             [ text "🤔 When did I? "]
         , a
             [ class "navbar-burger burger"
-            , classList [("is-active", model.isActive)]
+            , classIsActive model 
             , onClick ToggleIsActive
             ]
             [ span [][], span [][], span [][]]
         ]
     , div
-        [ class "navbar-menu", classList [("is-active", model.isActive)]]
+        -- [ class "navbar-menu", classList [("is-active", model.isActive)]]
+        [ class "navbar-menu", classIsActive model ]
         [ navbarMenuEndView ]
     ]
+
+classIsActive : NavModel -> Attribute NavMsg
+classIsActive model = classList [("is-active", model.isActive)]
 
 navbarMenuEndView : Html NavMsg
 navbarMenuEndView =
