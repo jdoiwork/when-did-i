@@ -18,6 +18,9 @@ topNav =
         [ a
             [ class "navbar-item", class "title", href "/" ]
             [ text "🤔 When did I? "]
+        , a
+            [ class "navbar-burger burger"]
+            [ span [][], span [][], span [][]]
         ]
     , div
         [ class "navbar-menu"]
