@@ -37,6 +37,7 @@ type alias Model =
   , url : Url.Url
   , login : LoginStatus
   , topNavState : NavModel
+  , taskListState : TaskListModel
   }
   
 type LoginStatus = Checking
@@ -46,7 +47,7 @@ type LoginStatus = Checking
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
-  ( Model key url Checking navInit, Cmd.none )
+  ( Model key url Checking navInit taskListInit, Cmd.none )
 
 type Msg
   = LinkClicked Browser.UrlRequest

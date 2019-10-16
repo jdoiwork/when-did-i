@@ -1,4 +1,4 @@
-module Page.TaskList exposing (listView)
+module Page.TaskList exposing (listView, TaskListModel, taskListInit)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -11,6 +11,14 @@ import Model.TaskItem exposing (..)
 type TaskItemMsg = Delete Uid
                  | Edit Uid
                  | DoneAgain Uid
+
+type alias TaskListModel =
+  { items : List TaskItem
+
+  }
+
+taskListInit : TaskListModel
+taskListInit = { items = dummyTasks }
 
 dummyTasks : List TaskItem
 dummyTasks = 
