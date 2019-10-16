@@ -1,5 +1,7 @@
 import './inits/css-init'
 import * as auth from './services/auth'
+import * as db from './services/dummy-database'
+
 import { ElmAppAdapter } from './helpers/elm-app-adapter'
 
 require("./inits/firebase-init").init()
@@ -21,8 +23,10 @@ app.logout(() => {
   auth.signOut()
 })
 
-app.postNewItem(text => {
-  console.log(text)
+app.postNewItem(async title => {
+  console.log(title)
+  const item = await db.postItem(title)
+  console.log("new item", item)
 })
 
 window["app"] = app
