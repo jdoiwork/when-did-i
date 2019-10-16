@@ -63,7 +63,9 @@ itemCardView item =
     [ class "card", id item.uid ]
     [ header
         [class "card-header"]
-        [ p [ class "card-header-title" ] [ text item.title] ]
+        [ p [ class "card-header-title" ] [ text item.title]
+        , a [ class "card-header-icon"] [ span [ class "icon"] [ i [class "ion ion-ios-arrow-dropdown"] []]]
+        ]
     , div
         [ class "card-content"]
         [ text "2019/10/16 12:34:56"]
