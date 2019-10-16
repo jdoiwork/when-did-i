@@ -90,10 +90,9 @@ update msg model =
     RequestTopNavMsg navMsg ->
       case navMsg of
         Logout -> ({model | topNavState = navInit }, logout ())
-        ToggleIsActive ->
+        _ ->
           let (navModel, _) = navUpdate navMsg model.topNavState
           in ({model | topNavState = navModel}, Cmd.none)
-        _ -> (model, Cmd.none)
 
     ClickBody ->
       let (navModel, _) = navUpdate ClickOutSideNav model.topNavState

@@ -6,20 +6,23 @@ import Html.Events exposing (..)
 
 type NavMsg = Logout
             | ToggleIsActive
+            | InputDidItNow String
             | ClickOutSideNav
 
 type alias NavModel =
   { isActive : Bool
+  , didItNow : String
   }
 
 navInit : NavModel
-navInit = { isActive = False }
+navInit = { isActive = False, didItNow = "" }
 
 navUpdate : NavMsg -> NavModel -> (NavModel, Cmd NavMsg)
 navUpdate msg model =
   case msg of
     ToggleIsActive -> ({model | isActive = not model.isActive}, Cmd.none)
     ClickOutSideNav -> ({model | isActive = False}, Cmd.none)
+    InputDidItNow didItNow -> ({model | didItNow = (Debug.log "update didItNow" didItNow)}, Cmd.none)
     _ -> (model, Cmd.none)
 
 topNavView : NavModel -> Html NavMsg
@@ -78,10 +81,10 @@ bottomNavView model =
     [ div
         -- [ class "navbar-menu", classList [("is-active", model.isActive)]]
         [ class "navbar-menu is-active", style "justify-content" "stretch" ]
-        [ navbarMenuStartView ]
+        [ navbarMenuStartView model]
     ]
-navbarMenuStartView : Html NavMsg
-navbarMenuStartView =
+navbarMenuStartView : NavModel -> Html NavMsg
+navbarMenuStartView model =
   div
     [ class "navbar-start", style "width" "100%"]
     [ div
@@ -91,12 +94,13 @@ navbarMenuStartView =
             [ div
                 [ class "control is-expanded"]
                 [ input
-                    [class "input", type_ "text"]
+                    [class "input", type_ "text", onInput InputDidItNow ]
                     []
                 ]
             , div
                 [ class "control"]
-                [ a [ class "button is-primary", onClick Logout] [ text "Did it Now! 🤩" ]
+                [ a [ class "button is-primary", onClick Logout, disabled <| model.didItNow == ""] [ text "Did it Now! 🤩"]
+                , text (Debug.log "didItNow" model.didItNow)
                 ]
             ]
         ]
