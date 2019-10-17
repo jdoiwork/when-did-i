@@ -22,7 +22,7 @@ describe("@catchLogAsync", () => {
     spy.mockRestore()
   })
 
-  test("rethrow when throw error", () =>{
+  it("rethrow when throw error", () =>{
     expect.assertions(2)
     return new Hoge().f().catch((error: Error) => {
       expect(spy).toHaveBeenCalled()
@@ -30,7 +30,7 @@ describe("@catchLogAsync", () => {
     })
   })
 
-  test("promise then", () =>{
+  it("promise then", () =>{
     return new Hoge().g().then(n => expect(n).toBe(true))
   })
   
