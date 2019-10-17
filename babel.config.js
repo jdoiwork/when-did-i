@@ -8,5 +8,9 @@ module.exports = {
         },
       },
     ],
+    [ "@babel/typescript"]
   ],
+  plugins: [
+    ["@babel/plugin-proposal-decorators", {  legacy: true }]
+  ]
 };
