@@ -138,21 +138,28 @@ convertNewItemWithValue value = value |> decodeTaskItem |> CreatedNewItem
 view : Model -> Browser.Document Msg
 view model =
   { title = "When did I? 🤔"
-  , body =
+  , body = model |> --[div [class "bg"][]]
       case model.url.path of
-        "/login" ->
-          [ mapNavView model topNavViewWithoutFixed
-          , Html.map (\(Page.Login.LoginWith p) -> RequestLogin p) Page.Login.login
-
-          ]
-        _ -> case model.login of
-              LoggedOut -> [loggedOutView model]
-              _ ->
-                [ mapNavView model topNavView
-                , div [onClick ClickBody] [ loginStatus model ]
-                , mapNavView model bottomNavView
-                ]
+        "/login" -> showLogin
+        _        -> showIndex
   }
+
+showLogin : Model -> List (Html Msg)
+showLogin model =
+  [ mapNavView model topNavViewWithoutFixed
+  , Html.map (\(Page.Login.LoginWith p) -> RequestLogin p) Page.Login.login
+
+  ]
+
+showIndex : Model -> List (Html Msg)
+showIndex model =
+  case model.login of
+    LoggedOut -> [loggedOutView model]
+    _         ->
+      [ mapNavView model topNavView
+      , div [onClick ClickBody] [ loginStatus model ]
+      , mapNavView model bottomNavView
+      ]
 
 mapNavView : Model -> (NavModel -> Html NavMsg) -> Html Msg
 mapNavView model navView =
