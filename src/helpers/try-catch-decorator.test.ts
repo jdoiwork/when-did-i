@@ -13,12 +13,26 @@ class Hoge {
   }
 }
 
-test("rethrow when throw error", () =>{
-  expect.assertions(1)
-  return new Hoge().f().catch((error: Error) => expect(error.message).toMatch(HogeErrorMessage))
-})
+describe("@catchLogAsync", () => {
+  let spy : jest.SpyInstance = null
+  beforeEach(() => {
+    spy = jest.spyOn(console, 'error');
+  })
+  afterEach(() => {
+    spy.mockRestore()
+  })
 
-test("promise then", () =>{
-  return new Hoge().g().then(n => expect(n).toBe(true))
-})
+  test("rethrow when throw error", () =>{
+    expect.assertions(2)
+    return new Hoge().f().catch((error: Error) => {
+      expect(spy).toHaveBeenCalled()
+      expect(error.message).toMatch(HogeErrorMessage)
+    })
+  })
 
+  test("promise then", () =>{
+    return new Hoge().g().then(n => expect(n).toBe(true))
+  })
+  
+    
+})
