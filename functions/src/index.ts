@@ -10,6 +10,7 @@ export const helloWorld = functions.https.onRequest((request, response) => {
 
 export const helloFromWeb = functions.https.onCall((data:any, context: CallableContext) : any => {
   return {
-    data, context
+    data,
+    context: { auth: context.auth, instanceIdToken: context.instanceIdToken }
   }
 })

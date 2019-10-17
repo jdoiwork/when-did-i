@@ -4,7 +4,9 @@ import * as db from './services/dummy-database'
 
 import { ElmAppAdapter } from './helpers/elm-app-adapter'
 
-require("./inits/firebase-init").init()
+import {init as firebaseInit } from "./inits/firebase-init"
+
+firebaseInit()
 
 const app = new ElmAppAdapter({})
 
@@ -38,3 +40,6 @@ app.postNewItem(async title => {
 })
 
 window["app"] = app
+
+import * as firebase from "firebase/app"
+window["firebase"] = firebase

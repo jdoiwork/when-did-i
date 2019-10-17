@@ -8,8 +8,9 @@
   "scripts": {
     "hello": "😀😀😀😀😀",
     "dev": "parcel src/index.html --hmr-port 8081",
-    "build": "parcel build src/index.html src/robots.txt -d public --no-source-maps",
+    "build": "yarn clean-pub && parcel build src/index.html src/robots.txt -d public --no-source-maps",
     "clean": "rm -rf dist .cache elm-stuff public",
+    "clean-pub": "rm -f public/*.{js,css,map}",
     "type-check": "yarn tsc src/index.ts -w --noEmit",
     "deploy": "firebase deploy"
   },
