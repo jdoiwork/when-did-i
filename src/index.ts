@@ -43,3 +43,11 @@ window["app"] = app
 
 import * as firebase from "firebase/app"
 window["firebase"] = firebase
+
+
+import { catchLogAsync } from './helpers/try-catch-decorator'
+
+class Hoge {
+  @catchLogAsync
+  async f() {}
+}
