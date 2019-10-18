@@ -1,14 +1,19 @@
 import './inits/css-init'
 import * as auth from './services/auth'
-import * as db from './services/dummy-database'
 
-import { ElmAppAdapter } from './helpers/elm-app-adapter'
+import { ElmAppAdapter, Status } from './helpers/elm-app-adapter'
 
 import {init as firebaseInit } from "./inits/firebase-init"
+
+
+import * as DatabaseServiceFactory from './services/database-service-factory'
 
 firebaseInit()
 
 const app = new ElmAppAdapter({})
+
+let db = DatabaseServiceFactory.createService()
+
 
 app.loginWith(provider => {
   console.log(`${provider} login`)
@@ -16,8 +21,13 @@ app.loginWith(provider => {
 })
 
 auth.subscribe((user) => {
-  const status = user ? "login" : "logout"
-  app.loginStatusChanged(status)
+  const params : { status: Status, db: DatabaseServiceFactory.DatabaseType } =
+    user ?
+     { status: "login", db: 'firestore'} :
+     { status: "logout", db: 'null'}
+  db = DatabaseServiceFactory.createService(params.db)
+
+  app.loginStatusChanged(params.status)
 })
 
 app.logout(() => {
@@ -27,9 +37,10 @@ app.logout(() => {
 
 app.postNewItem(async title => {
   console.log(title)
-  const item = await db.postItem(title)
-  app.createdNewItem(item)
-  console.log("new item", item)
+  // const item = await db.postItem(title)
+  db.createTaskItem(title).then(console.log).catch(e => console.error)
+  // app.createdNewItem(item)
+  // console.log("new item", item)
 })
 
 window["app"] = app
@@ -41,13 +52,6 @@ window["onCalls"] = {
   ok: fs.httpsCallable("ok"),
   err: fs.httpsCallable("err"),
   helloFromWeb: fs.httpsCallable("helloFromWeb"),
-}
-
-import { catchLogAsync } from './helpers/try-catch-decorator'
-
-class Hoge {
-  @catchLogAsync
-  async f() {}
 }
 
 window["onCalls"].ok("ok dayo").then(a => console.log(a)).catch(e => console.error(e))

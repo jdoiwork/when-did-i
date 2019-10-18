@@ -11,9 +11,9 @@ interface Flags {
     // initialValue: string;
 }
 
-type Provider = "google" //| "twitter"
+export type Provider = "google" //| "twitter"
 
-type Status = "login" | "logout" | "checking"
+export type Status = "login" | "logout" | "checking"
 
 export class ElmAppAdapter {
     app: any;

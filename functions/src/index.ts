@@ -33,8 +33,10 @@ export const err = functions.https.onCall(async (data: any, context: CallableCon
 
 const createOnCall = (f : (data: any, context: CallableContext) => any) => functions.https.onCall(f)
 
-export const createTaskItem = createOnCall(() => {
-
+// export const createTaskItem = functions.https.onCall(async (data, context) => {
+export const createTaskItem = createOnCall(async (data, context) => {
+  await authorize(context)
+  return { message: "task item created" }
 })
 
 export const createHelloItem = functions.https.onRequest(async (req, res) => {
