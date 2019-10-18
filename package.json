@@ -16,7 +16,8 @@
     "deploy": "firebase deploy --only hosting",
     "test": "jest",
     "serve": "firebase serve -p 1234",
-    "deploy-func": "firebase deploy --only functions"
+    "deploy-func": "firebase deploy --only functions",
+    "deploy-func1": "firebase deploy --only functions:createTaskItem"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",

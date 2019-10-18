@@ -5,7 +5,10 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 import { authorize, error403 } from './helpers/authorize'
 
-admin.initializeApp(functions.config().firebase)
+import * as TaskItemService from './services/task-item-service'
+
+// admin.initializeApp(functions.config().firebase)
+require('./helpers/firebase-init').init()
 
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
@@ -34,9 +37,12 @@ export const err = functions.https.onCall(async (data: any, context: CallableCon
 const createOnCall = (f : (data: any, context: CallableContext) => any) => functions.https.onCall(f)
 
 // export const createTaskItem = functions.https.onCall(async (data, context) => {
-export const createTaskItem = createOnCall(async (data, context) => {
-  await authorize(context)
-  return { message: "task item created" }
+export const createTaskItem = createOnCall(async (request, context) => {
+  const authInfo = await authorize(context)
+  console.log("createTaskItem", request)
+  
+  const item = await TaskItemService.createItem(request, authInfo)
+  return { message: "task item created", item: item }
 })
 
 export const createHelloItem = functions.https.onRequest(async (req, res) => {

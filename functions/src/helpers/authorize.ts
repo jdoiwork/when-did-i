@@ -12,7 +12,7 @@ export function error403() : HttpsError {
   return new HttpsError("permission-denied", "The caller does not have permission to execute the specified operation.")
 }
 
-type AuthInfo = { uid: string, token: auth.DecodedIdToken }
+export type AuthInfo = { uid: string, token: auth.DecodedIdToken }
 
 export async function authorize(context: CallableContext) : Promise<AuthInfo> {
   if(context.auth) {
