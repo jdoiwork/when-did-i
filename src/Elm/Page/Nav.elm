@@ -1,7 +1,13 @@
-module Page.Nav exposing (topNavView, topNavViewWithoutFixed, bottomNavView, navInit, navUpdate, NavModel, NavMsg(..))
+module Page.Nav exposing
+    ( topNavView, topNavViewWithoutFixed, bottomNavView
+    , navInit, navUpdate, NavModel, NavMsg(..))
 
 import Html exposing (..)
-import Html.Attributes exposing (class, style, href, attribute, classList, disabled, value, type_)
+import Html.Attributes exposing ( class, style, href, attribute, classList
+                                , disabled, value, type_, name, id, for)
+import Html.Attributes.Aria exposing ( ariaLabel, ariaLabelledby)
+
+
 import Html.Events exposing (..)
 
 type NavMsg = Logout
@@ -113,8 +119,13 @@ navbarMenuStartView model =
             [ class "field has-addons", styleWidth100]
             [ div
                 [ class "control is-expanded"]
-                [ input
-                    [class "input", type_ "text", onInput InputDidItNow, value model.didItNow ]
+                [ label
+                    [ for "new-title", class "is-hidden", ariaLabel "new title", id "new-title-label"]
+                    [ text "new title" ]
+                , input
+                    [ class "input", type_ "text", onInput InputDidItNow
+                    , value model.didItNow, name "title", id "new-title"
+                    , ariaLabelledby "new-title-label" ]
                     []
                 ]
             , div

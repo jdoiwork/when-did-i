@@ -157,7 +157,7 @@ showIndex model =
     LoggedOut -> [loggedOutView model]
     _         ->
       [ mapNavView model topNavView
-      , div [onClick ClickBody] [ loginStatus model ]
+      , main_ [] [div [onClick ClickBody] [ loginStatus model ]]
       , mapNavView model bottomNavView
       ]
 
@@ -180,7 +180,7 @@ loginStatus model =
     
 loggedOutView : Model -> Html Msg
 loggedOutView model =
-  div []
+  main_ []
     [ welcome
     ]
 
