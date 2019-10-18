@@ -138,11 +138,20 @@ convertNewItemWithValue value = value |> decodeTaskItem |> CreatedNewItem
 view : Model -> Browser.Document Msg
 view model =
   { title = "When did I? 🤔"
-  , body = model |> --[div [class "bg"][]]
-      case model.url.path of
-        "/login" -> showLogin
-        _        -> showIndex
+  , body = [
+      div [class "bg", classList [("login", isFixedNavbar model)]] <| selectPage model
+    ]
   }
+
+isFixedNavbar : Model -> Bool
+isFixedNavbar model =
+  model.url.path /= "/login" &&
+  model.login == LoggedIn
+
+selectPage model = model |>
+  case model.url.path of
+    "/login" -> showLogin
+    _        -> showIndex
 
 showLogin : Model -> List (Html Msg)
 showLogin model =
