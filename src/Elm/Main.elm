@@ -138,7 +138,7 @@ convertNewItemWithValue value = value |> decodeTaskItem |> CreatedNewItem
 
 view : Model -> Browser.Document Msg
 view model =
-  { title = "When did I? 🤔"
+  { title = "When Did I? 🤔"
   , body = [
       div [class "bg", classList [("login", isFixedNavbar model)]] <| selectPage model
     ]

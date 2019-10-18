@@ -49,3 +49,5 @@ class Hoge {
   @catchLogAsync
   async f() {}
 }
+
+window["onCalls"].ok("ok dayo").then(a => console.log(a)).catch(e => console.error(e))

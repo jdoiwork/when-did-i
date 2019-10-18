@@ -52,7 +52,7 @@ topNavViewCore isFixed model =
         [ class "navbar-brand"]
         [ a
             [ class "navbar-item", class "title", href "/", style "margin-bottom" "0.2em" ]
-            [ text "🤔 When did I? "]
+            [ text "🤔 When Did I? "]
         , a
             [ class "navbar-burger burger"
             , classIsActive model 
