@@ -3,6 +3,7 @@ module Page.Login exposing (login, AuthProvider, Msg(..))
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Attributes as A
 import Html.Events exposing (..)
 
 type AuthProvider = Google
@@ -33,6 +34,8 @@ login =
           -- <i class="material-icons">face</i>
           -- <i class="ion-logo-facebook"></i>
           ]
+    -- , div [class "conteiner"] [progress [ class "progress is-primary", A.max "100"] [text "50%"]]
+    -- [class "is-loading"]
     ]]
 
 type alias IconName = String
@@ -40,7 +43,8 @@ type alias IconName = String
 iconWithText : IconName -> String -> List (Html a)
 iconWithText iconName t =
   [ ionIcon iconName
-  , span [] [text t]]
+  , span [] [text t]
+  ]
 
 ionIcon : String -> Html a
 ionIcon ionName = span [ class "icon"] [i [ class <| "ion-" ++ ionName] []]
