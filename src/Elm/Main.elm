@@ -5,6 +5,7 @@ import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Html.Lazy exposing (..)
 import Json.Encode as E
 import Json.Decode as D
 import Url
@@ -166,13 +167,16 @@ showIndex model =
     LoggedOut -> [loggedOutView model]
     _         ->
       [ mapNavView model topNavView
-      , main_ [] [div [onClick ClickBody] [ loginStatus model ]]
+      , main_ []
+          [ div [onClick ClickBody]
+              [ lazy loginStatus model ]
+          ]
       , mapNavView model bottomNavView
       ]
 
 mapNavView : Model -> (NavModel -> Html NavMsg) -> Html Msg
 mapNavView model navView =
-  Html.map convertNavMsg <| navView model.topNavState
+  Html.map convertNavMsg <| lazy navView model.topNavState
 
 convertNavMsg : NavMsg -> Msg
 convertNavMsg nav =
