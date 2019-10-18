@@ -3,6 +3,8 @@ import * as admin from 'firebase-admin'
 
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
+import { authorize, error403 } from './helpers/authorize'
+
 admin.initializeApp(functions.config().firebase)
 
 // // Start writing Firebase Functions
@@ -18,6 +20,17 @@ export const helloFromWeb = functions.https.onCall((data:any, context: CallableC
     context: { auth: context.auth, instanceIdToken: context.instanceIdToken }
   }
 })
+
+export const ok = functions.https.onCall(async (data: any, context: CallableContext) => {
+  await authorize(context)
+  return { ok: 'ok', requestData: data}
+})
+
+export const err = functions.https.onCall(async (data: any, context: CallableContext) => {
+  await authorize(context)
+  throw error403()
+})
+
 
 export const createHelloItem = functions.https.onRequest(async (req, res) => {
   try {

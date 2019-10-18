@@ -43,7 +43,12 @@ window["app"] = app
 
 import * as firebase from "firebase/app"
 window["firebase"] = firebase
-
+const fs = firebase.functions()
+window["onCalls"] = {
+  ok: fs.httpsCallable("ok"),
+  err: fs.httpsCallable("err"),
+  helloFromWeb: fs.httpsCallable("helloFromWeb"),
+}
 
 import { catchLogAsync } from './helpers/try-catch-decorator'
 

@@ -12,8 +12,9 @@
     "clean": "rm -rf dist .cache elm-stuff public",
     "clean-pub": "rm -f public/*.{js,css,map}",
     "type-check": "yarn tsc src/index.ts -w --noEmit --target ES5 --experimentalDecorators",
-    "deploy": "firebase deploy",
-    "test": "jest"
+    "deploy": "firebase deploy --only hosting",
+    "test": "jest",
+    "deploy-func": "firebase deploy --only functions"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
