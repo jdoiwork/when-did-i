@@ -9,6 +9,9 @@ module Page.TaskList exposing
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Html.Keyed as Keyed
+import Html.Lazy exposing (..)
+
 import Time exposing (..)
 
 import Model.TaskItem exposing (..)
@@ -58,7 +61,8 @@ listView model =
 gridListView : List TaskItem -> Html TaskListMsg
 gridListView xs =
   div [ class "container"]
-    [div [ class "columns is-multiline" ] <| List.map columnView xs]
+    [ Keyed.node "div" [ class "columns is-multiline" ] <| List.map (\x -> (x.uid, lazy columnView x)) xs
+    ]
   
 
 columnView : TaskItem -> Html TaskListMsg
