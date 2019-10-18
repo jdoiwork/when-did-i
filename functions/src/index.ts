@@ -31,6 +31,11 @@ export const err = functions.https.onCall(async (data: any, context: CallableCon
   throw error403()
 })
 
+const createOnCall = (f : (data: any, context: CallableContext) => any) => functions.https.onCall(f)
+
+export const createTaskItem = createOnCall(() => {
+
+})
 
 export const createHelloItem = functions.https.onRequest(async (req, res) => {
   try {
