@@ -6,7 +6,7 @@ import Html exposing (..)
 import Html.Attributes exposing ( class, style, href, attribute, classList
                                 , disabled, value, type_, name, id, for)
 import Html.Attributes.Aria exposing ( ariaLabel, ariaLabelledby)
-
+import Html.Lazy exposing (..)
 
 import Html.Events exposing (..)
 
@@ -102,7 +102,7 @@ bottomNavView model =
             [ class "form", styleWidth100
             , onSubmit <| CreateItem model.didItNow
             ]
-            [ navbarMenuStartView model
+            [ lazy navbarMenuStartView model
             ]
         ]
     ]
@@ -122,11 +122,7 @@ navbarMenuStartView model =
                 [ label
                     [ for "new-title", class "is-hidden", ariaLabel "new title", id "new-title-label"]
                     [ text "new title" ]
-                , input
-                    [ class "input", type_ "text", onInput InputDidItNow
-                    , value model.didItNow, name "title", id "new-title"
-                    , ariaLabelledby "new-title-label" ]
-                    []
+                , lazy titleInput model.didItNow
                 ]
             , div
                 [ class "control"]
@@ -140,3 +136,20 @@ navbarMenuStartView model =
             ]
         ]
     ]
+
+titleInput : String -> Html NavMsg
+titleInput didItNow =
+    input
+        -- attrs
+        [ class "input"
+        , type_ "text"
+        , onInput InputDidItNow
+        , value didItNow
+        , name "title"
+        , id "new-title"
+        , ariaLabelledby "new-title-label"
+        ]
+        -- elements
+        [
+
+        ]
