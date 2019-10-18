@@ -23,7 +23,7 @@ export const helloFromWeb = functions.https.onCall((data:any, context: CallableC
 
 export const ok = functions.https.onCall(async (data: any, context: CallableContext) => {
   await authorize(context)
-  return { ok: 'ok', requestData: data}
+  return { ok: 'ok', requestData: data }
 })
 
 export const err = functions.https.onCall(async (data: any, context: CallableContext) => {
