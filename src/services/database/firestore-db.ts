@@ -4,10 +4,10 @@ import { catchLogAsync } from '../../helpers/try-catch-decorator'
 
 import * as firebase from 'firebase/app'
 import 'firebase/firestore'
-import { DocumentChangeType } from '@google-cloud/firestore'
 import { TaskItem } from '../../models/task-item'
 
 type DocumentChange = firebase.firestore.DocumentChange
+type DocumentChangeType = firebase.firestore.DocumentChangeType
 
 export function isFirebaseUser(user: any) : boolean {
   return !!(((user || {}) as firebase.User).uid)
