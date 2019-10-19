@@ -10,6 +10,7 @@ import Json.Encode as E
 import Json.Decode as D
 import Url
 import Time exposing (Posix)
+import Task
 import Tuple exposing (first)
 
 import Page.Nav exposing (..)
@@ -52,7 +53,7 @@ type LoginStatus = Checking
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
-  ( Model key url Checking navInit taskListInit, Cmd.none )
+  ( Model key url Checking navInit taskListInit, Task.perform Tick Time.now )
 
 type Msg
   = LinkClicked Browser.UrlRequest
@@ -60,7 +61,6 @@ type Msg
   | LoginStatusChanged String
   | RequestLogin Page.Login.AuthProvider
   | RequestTopNavMsg NavMsg
-  -- | CreatedNewItem (Result D.Error TaskItem)
   | UpdatedItems (Result D.Error (List ChangeEvent))
   | ClickBody
   | Tick Posix
