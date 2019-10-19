@@ -164,9 +164,6 @@ subscriptions model =
     , Time.every 5000 Tick -- every 5 sec
     ]
 
--- convertNewItemWithValue : D.Value -> Msg
--- convertNewItemWithValue value = value |> decodeTaskItem |> CreatedNewItem
-
 convertUpdatedItems : D.Value -> Msg
 convertUpdatedItems value = value |> decodeUpdatedItems |> UpdatedItems
 
