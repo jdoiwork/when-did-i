@@ -24,6 +24,7 @@ type TaskListMsg = DeleteItem Uid
                  | CreateItem TaskItem
                  | UpdatedItems (List ChangeEvent)
                  | UpdatedNow Posix
+                 | OpenMenu TaskItemRe
 
 
 type alias TaskListModel =
@@ -121,8 +122,9 @@ itemCardViewHeader itemRe =
             [ class "dropdown-trigger" ]
             [ div
                 [class ""]
-                [ a [ class "card-header-icon"]
-                    [ span [ class "icon" ] [ i [class "ion ion-ios-arrow-dropdown"] []]]]
+                [ a [ class "card-header-icon" ]
+                    [ ionIcon "ios-arrow-dropdown" ]
+                ]
             ]
         , div
             [ class "dropdown-menu" ]
