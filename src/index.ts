@@ -53,8 +53,7 @@ app.patchItemDidIt(uid => {
 })
 
 app.deleteItem(uid => {
-  //db.patchTaskItemDidIt(uid).then(console.log).catch(e => console.error)
-  console.log("delete item", uid)
+  db.deleteItem(uid).then(console.log).catch(console.error)
 })
 
 window["app"] = app

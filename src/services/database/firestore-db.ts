@@ -29,13 +29,17 @@ export class FireStoreDatabase implements IDataBaseService {
   @catchLogAsync
   async createTaskItem(title: string): Promise<any> {
     return this.callCreateTaskItem(title)
-    
   }
   
   @catchLogAsync
   async patchTaskItemDidIt(taskUid: string): Promise<any> {
     return this.callPatchTaskItemDidIt(taskUid)
-    
+  }
+
+  @catchLogAsync
+  async deleteItem(taskUid: string): Promise<any> {
+    await this.tasks().doc(taskUid).delete()
+    return { uid: taskUid }
   }
 
   private static dctTable = {
@@ -57,9 +61,12 @@ export class FireStoreDatabase implements IDataBaseService {
            , Class.taskItemFromDocument(dc.doc.data())]
   }
 
+  tasks() {
+    return this.db.collection('users').doc(this.user.uid).collection('tasks')
+  }
+
   subscribe(callback: (items: Array<[ChangeEvent, TaskItem]>) => void) : void {
-    const tasks = this.db.collection('users').doc(this.user.uid).collection('tasks')
-    this._unsubscribe = tasks.onSnapshot(snapshot => {
+    this._unsubscribe = this.tasks().onSnapshot(snapshot => {
       callback(snapshot.docChanges().map(Class.updateItemFromDocumentChange))
     })
   }
@@ -70,8 +77,7 @@ export class FireStoreDatabase implements IDataBaseService {
 
   @catchLogAsync
   async getIndex() : Promise<TaskItem[]> {
-    const tasks = this.db.collection('users').doc(this.user.uid).collection('tasks')
-    const snapshot = await tasks.get()
+    const snapshot = await this.tasks().get()
     return snapshot.docs.map(doc => Class.taskItemFromDocument(doc.data()))
   }
 }
