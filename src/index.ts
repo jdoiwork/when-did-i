@@ -24,11 +24,7 @@ auth.subscribe(async ({user, status}) => {
   db.unsubscribe()
   db = DatabaseServiceFactory.createService(user)
   app.loginStatusChanged(status)
-  if (false) {
-  const items = await db.getIndex()
-  console.log("getIndex", items)
 
-  }
   db.subscribe(newItems => {
     console.log("subscribe", newItems)
     app.updatedItems(newItems)
@@ -41,11 +37,7 @@ app.logout(() => {
 })
 
 app.postNewItem(async title => {
-  console.log(title)
-  // const item = await db.postItem(title)
   db.createTaskItem(title).then(console.log).catch(e => console.error)
-  // app.createdNewItem(item)
-  // console.log("new item", item)
 })
 
 app.patchItemDidIt(uid => {
@@ -55,16 +47,3 @@ app.patchItemDidIt(uid => {
 app.deleteItem(uid => {
   db.deleteItem(uid).then(console.log).catch(console.error)
 })
-
-window["app"] = app
-
-import * as firebase from "firebase/app"
-window["firebase"] = firebase
-const fs = firebase.functions()
-window["onCalls"] = {
-  ok: fs.httpsCallable("ok"),
-  err: fs.httpsCallable("err"),
-  helloFromWeb: fs.httpsCallable("helloFromWeb"),
-}
-
-window["onCalls"].ok("ok dayo").then(a => console.log(a)).catch(e => console.error(e))
