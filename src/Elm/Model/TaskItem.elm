@@ -1,4 +1,5 @@
-module Model.TaskItem exposing (TaskItem, Uid, taskItemDecoder, decodeTaskItem)
+module Model.TaskItem exposing (TaskItem, Uid, taskItemDecoder
+  , decodeTaskItem, ChangeEvent(..), decodeUpdatedItems)
 
 import Time exposing (..)
 import Json.Decode as D
@@ -11,6 +12,10 @@ type alias TaskItem =
   , lastUpdated: Posix
   }
 
+type ChangeEvent = CreatedItem TaskItem
+                 | UpdatedItem TaskItem
+                 | DeletedItem TaskItem
+
 taskItemDecoder : D.Decoder TaskItem
 taskItemDecoder =
   D.map3 TaskItem
@@ -20,4 +25,21 @@ taskItemDecoder =
 
 decodeTaskItem : D.Value -> (Result D.Error TaskItem)
 decodeTaskItem = D.decodeValue taskItemDecoder
+
+decodeUpdatedItems : D.Value -> (Result D.Error (List ChangeEvent))
+decodeUpdatedItems =
+  D.decodeValue
+    (D.list
+      (D.map2 (\event taskItem -> event taskItem)
+        (D.index 0 D.string |> D.andThen changeEventKey)
+        (D.index 1 taskItemDecoder)
+        ))
+
+changeEventKey : String -> D.Decoder (TaskItem -> ChangeEvent)
+changeEventKey key =
+  case key of
+    "create" -> D.succeed CreatedItem
+    "update" -> D.succeed UpdatedItem
+    "delete" -> D.succeed DeletedItem
+    _ -> D.fail "unknown change event keyword"
 

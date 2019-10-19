@@ -24,9 +24,6 @@ type TaskListMsg = DeleteItem Uid
                  | CreateItem TaskItem
                  | UpdatedItems (List ChangeEvent)
 
-type ChangeEvent = CreatedItem TaskItem
-                 | UpdatedItem TaskItem
-                 | DeletedItem TaskItem
 
 type alias TaskListModel =
   { items : List TaskItem

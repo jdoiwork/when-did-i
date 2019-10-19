@@ -58,7 +58,7 @@ type Msg
   | RequestTopNavMsg NavMsg
   | PostNewItem String
   | CreatedNewItem (Result D.Error TaskItem)
-  | UpdatedItems (Result D.Error (List (String, TaskItem)))
+  | UpdatedItems (Result D.Error (List ChangeEvent))
   | ClickBody
   | Ignore
 
@@ -111,8 +111,12 @@ update msg model =
               | taskListState = taskListState
               , topNavState = navInit }
               , Cmd.none)
-    UpdatedItems items ->
-      (model, Cmd.none)
+    UpdatedItems result ->
+      case result of
+        Ok items ->
+          let (newTaskList, _) = updateTaskList (Page.TaskList.UpdatedItems items) model.taskListState 
+          in ({ model | taskListState = newTaskList }, Cmd.none)
+        _ -> (model, Cmd.none)
     ClickBody ->
       let (navModel, _) = navUpdate ClickOutSideNav model.topNavState
       in ({model | topNavState = navModel}, Cmd.none)
@@ -138,7 +142,7 @@ convertNewItemWithValue : D.Value -> Msg
 convertNewItemWithValue value = value |> decodeTaskItem |> CreatedNewItem
 
 convertUpdatedItems : D.Value -> Msg
-convertUpdatedItems value = Ignore
+convertUpdatedItems value = value |> decodeUpdatedItems |> UpdatedItems
 
 -- VIEWS
 
