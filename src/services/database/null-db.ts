@@ -1,6 +1,7 @@
 
-import { IDataBaseService } from './types'
+import { IDataBaseService, ChangeEvent } from './types'
 import { catchLogAsync } from '../../helpers/try-catch-decorator'
+import { TaskItem } from '../../models/task-item'
 
 export class NullDatabase implements IDataBaseService {
 
@@ -9,7 +10,7 @@ export class NullDatabase implements IDataBaseService {
     return { data: "null database" }
   }
 
-  subscribe(_callback) : void {
+  subscribe(_callback: (items: Array<[ChangeEvent, TaskItem]>) => void) : void {
     
   }
 

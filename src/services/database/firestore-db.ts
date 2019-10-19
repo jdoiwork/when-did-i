@@ -5,6 +5,9 @@ import { catchLogAsync } from '../../helpers/try-catch-decorator'
 import * as firebase from 'firebase/app'
 import 'firebase/firestore'
 import { DocumentChangeType } from '@google-cloud/firestore'
+import { TaskItem } from '../../models/task-item'
+
+type DocumentChange = firebase.firestore.DocumentChange
 
 export function isFirebaseUser(user: any) : boolean {
   return !!(((user || {}) as firebase.User).uid)
@@ -33,14 +36,19 @@ export class FireStoreDatabase implements IDataBaseService {
     removed: "delete",
     modified: "update",
   }
+
   static changeEventFromDocumentChangeType(dct: DocumentChangeType) : ChangeEvent {
     return FireStoreDatabase.dctTable[dct] as ChangeEvent
   }
 
-  subscribe(callback) : void {
+  static updateItemFromDocumentChange(dc: DocumentChange) : [ChangeEvent, TaskItem] {
+    return ["create", { uid: "", title: "", lastUpdated: 0}]
+  }
+  
+  subscribe(callback: (items: Array<[ChangeEvent, TaskItem]>) => void) : void {
     const tasks = this.db.collection('users').doc(this.user.uid).collection('tasks')
     this._unsubscribe = tasks.onSnapshot(snapshot => {
-      snapshot.docChanges().map(dc => dc.type)
+      callback(snapshot.docChanges().map(Class.updateItemFromDocumentChange))
     })
   }
 
@@ -49,3 +57,4 @@ export class FireStoreDatabase implements IDataBaseService {
   }
 }
 
+const Class = FireStoreDatabase
