@@ -20,11 +20,16 @@ app.loginWith(provider => {
   auth.signIn()
 })
 
-auth.subscribe(({user, status}) => {
+auth.subscribe(async ({user, status}) => {
   db.unsubscribe()
   db = DatabaseServiceFactory.createService(user)
   app.loginStatusChanged(status)
-  db.subscribe(items => console.log(items))
+  if (false) {
+  const items = await db.getIndex()
+  console.log("getIndex", items)
+
+  }
+  db.subscribe(newItems => console.log("subscribe", newItems))
 })
 
 app.logout(() => {
