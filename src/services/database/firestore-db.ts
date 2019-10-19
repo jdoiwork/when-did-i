@@ -60,6 +60,13 @@ export class FireStoreDatabase implements IDataBaseService {
   unsubscribe() : void {
     this._unsubscribe()
   }
+
+  @catchLogAsync
+  async getIndex() : Promise<TaskItem[]> {
+    const tasks = this.db.collection('users').doc(this.user.uid).collection('tasks')
+    const snapshot = await tasks.get()
+    return snapshot.docs.map(doc => Class.taskItemFromDocument(doc.data()))
+  }
 }
 
 const Class = FireStoreDatabase
