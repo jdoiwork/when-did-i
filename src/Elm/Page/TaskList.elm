@@ -91,10 +91,10 @@ mergeItems : Posix -> List ChangeEvent -> List TaskItemRe -> List TaskItemRe
 mergeItems now ces ts =
   case ces of
     [] -> ts
-    (ce:: ces_) -> case ce of
-      CreatedItem item -> (mkTaskItemRe now item)::ts |> mergeItems now ces_
-      UpdatedItem item -> List.map (\t -> if t.item.uid == item.uid && t.item /= item then mkTaskItemRe now item else t) ts |> mergeItems now ces_
-      DeletedItem item -> List.filter (\t -> t.item.uid /= item.uid) ts |> mergeItems now ces_
+    (ce :: ces_) -> mergeItems now ces_ <| case ce of
+      CreatedItem item -> (mkTaskItemRe now item)::ts
+      UpdatedItem item -> List.map (\t -> if t.item.uid == item.uid && t.item /= item then mkTaskItemRe now item else t) ts
+      DeletedItem item -> List.filter (\t -> t.item.uid /= item.uid) ts
 
 listView : TaskListModel -> Html TaskListMsg
 listView model =
