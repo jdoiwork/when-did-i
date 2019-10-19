@@ -21,9 +21,10 @@ app.loginWith(provider => {
 })
 
 auth.subscribe(({user, status}) => {
+  db.unsubscribe()
   db = DatabaseServiceFactory.createService(user)
-
   app.loginStatusChanged(status)
+  db.subscribe(items => console.log(items))
 })
 
 app.logout(() => {

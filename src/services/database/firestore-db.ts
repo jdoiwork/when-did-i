@@ -41,10 +41,15 @@ export class FireStoreDatabase implements IDataBaseService {
     return FireStoreDatabase.dctTable[dct] as ChangeEvent
   }
 
-  static updateItemFromDocumentChange(dc: DocumentChange) : [ChangeEvent, TaskItem] {
-    return ["create", { uid: "", title: "", lastUpdated: 0}]
+  static taskItemFromDocument(doc: any) : TaskItem {
+    return { uid: doc.uid, title: doc.title, lastUpdated: doc.lastUpdated }
   }
-  
+
+  static updateItemFromDocumentChange(dc: DocumentChange) : [ChangeEvent, TaskItem] {
+    return [ Class.changeEventFromDocumentChangeType(dc.type)
+           , Class.taskItemFromDocument(dc.doc.data())]
+  }
+
   subscribe(callback: (items: Array<[ChangeEvent, TaskItem]>) => void) : void {
     const tasks = this.db.collection('users').doc(this.user.uid).collection('tasks')
     this._unsubscribe = tasks.onSnapshot(snapshot => {
