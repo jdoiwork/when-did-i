@@ -98,11 +98,7 @@ itemCardView itemRe =
   div
     [ class "card", id item.uid ]
     [ lazy itemCardViewHeader item
-    , div
-        [ class "card-content"]
-        [ text <| formatTime utc item.lastUpdated
-        , text itemRe.relative
-        ]
+    , lazy itemCardViewContent itemRe
     , footer
         [ class "card-footer"
         , style "justify-content" "center"
@@ -135,6 +131,14 @@ itemCardViewHeader item =
     [class "card-header"]
     [ p [ class "card-header-title" ] [ text item.title]
     , a [ class "card-header-icon"] [ span [ class "icon"] [ i [class "ion ion-ios-arrow-dropdown"] []]]
+    ]
+
+itemCardViewContent : TaskItemRe -> Html TaskListMsg
+itemCardViewContent itemRe =
+  div
+    [ class "card-content"]
+    [ text <| formatTime utc itemRe.item.lastUpdated
+    , text itemRe.relative
     ]
 
 actionButton : String -> List (Attribute a) -> String -> Html a
