@@ -55,11 +55,11 @@ export async function updateDidIt(taskUid : string, auth: AuthInfo) {
 
     await task.update(updateItem)
     
-    console.log(`createItem::set completed: ${taskUid}`)
+    console.log(`updateDidIt::set completed: ${taskUid}`)
     return { ...updateItem, uid: taskUid }
 
   } catch (e) {
-    console.error("Exception:!!!! createItem", { error:e, taskUid, auth})
+    console.error("Exception:!!!! updateDidIt", { error:e, taskUid, auth})
     throw new HttpsError('unknown', e.message, { taskUid, auth })
   }
   
