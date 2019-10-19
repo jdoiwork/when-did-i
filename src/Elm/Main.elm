@@ -114,6 +114,7 @@ update msg model =
     RequestByList taskListMsg ->
       case taskListMsg of
         DidItItem uid -> (model, patchItemDidIt uid)
+        --DidItItem uid -> (model, patchItemDidIt (Debug.log "main did it" uid))
         _ -> (model, Cmd.none)
 
     UpdatedItems result ->
@@ -149,7 +150,6 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.batch
     [ loginStatusChanged LoginStatusChanged
-    -- , createdNewItem convertNewItemWithValue
     , updatedItems convertUpdatedItems
     , Time.every 5000 Tick -- every 5 sec
     ]
@@ -220,5 +220,5 @@ loggedOutView model =
 loggedInView : Model -> Html Msg
 loggedInView model =
   div []
-    [ Html.map (\_ -> Ignore) <| listView model.taskListState
+    [ Html.map RequestByList <| listView model.taskListState
     ]

@@ -48,6 +48,10 @@ app.postNewItem(async title => {
   // console.log("new item", item)
 })
 
+app.patchItemDidIt(uid => {
+  console.log("patch did it", uid)
+})
+
 window["app"] = app
 
 import * as firebase from "firebase/app"
