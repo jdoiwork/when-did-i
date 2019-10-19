@@ -13,8 +13,15 @@ const firebaseConfig = {
   measurementId: "G-YSP0B2M5MB"
 }
 
+let initFlag = false
+
 function init() {
-  firebase.initializeApp(firebaseConfig)
+  if(!initFlag)
+  {
+    console.log('firebase initializeApp')
+    firebase.initializeApp(firebaseConfig)
+    initFlag = true;
+  }
   return firebase
 }
 
