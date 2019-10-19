@@ -23,5 +23,9 @@ export class FireStoreDatabase implements IDataBaseService {
     return this.callCreateTaskItem(title)
     
   }
+
+  subscribe(callback) : void {
+    
+  }
 }
 

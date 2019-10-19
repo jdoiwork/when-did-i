@@ -8,5 +8,9 @@ export class NullDatabase implements IDataBaseService {
   async createTaskItem(title: string): Promise<any> {
     return { data: "null database" }
   }
+
+  subscribe(callback) : void {
+    
+  }
 }
 
