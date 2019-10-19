@@ -9,8 +9,6 @@ import Html.Lazy exposing (..)
 import Json.Encode as E
 import Json.Decode as D
 import Url
-import Task
-import Time
 
 import Page.Nav exposing (..)
 import Page.Welcome exposing (..)
@@ -58,7 +56,6 @@ type Msg
   | LoginStatusChanged String
   | RequestLogin Page.Login.AuthProvider
   | RequestTopNavMsg NavMsg
-  | PostNewItem String
   | CreatedNewItem (Result D.Error TaskItem)
   | UpdatedItems (Result D.Error (List ChangeEvent))
   | ClickBody
@@ -99,17 +96,14 @@ update msg model =
     RequestTopNavMsg navMsg ->
       case navMsg of
         Logout -> ({model | topNavState = navInit }, logout ())
-        Page.Nav.CreateItem title ->
+        Page.Nav.CreateItem didItNow ->
           let (navModel, _) = navUpdate navMsg model.topNavState
           in ({model | topNavState = navModel},
-            Task.perform (\_ -> PostNewItem title) Time.now
+            postNewItem didItNow
             )
         _ ->
           let (navModel, _) = navUpdate navMsg model.topNavState
           in ({model | topNavState = navModel}, Cmd.none)
-
-    PostNewItem didItNow ->
-      (model, postNewItem didItNow)
 
     CreatedNewItem resultNewItem ->
       case resultNewItem of
