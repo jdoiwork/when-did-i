@@ -33,21 +33,21 @@ taskListInit : TaskListModel
 taskListInit = { items = dummyTasks }
 
 dummyTasks : List TaskItem
-dummyTasks = 
-  [ { uid = "abc-0", title = "aaa 0", lastUpdated = millisToPosix 1}
-  , { uid = "edf-1", title = "bbb 1", lastUpdated = millisToPosix 1}
-  , { uid = "edf-2", title = "bbb 2", lastUpdated = millisToPosix 1}
-  , { uid = "edf-3", title = "bbb 3", lastUpdated = millisToPosix 1}
-  , { uid = "edf-4", title = "bbb 4", lastUpdated = millisToPosix 1}
-  , { uid = "edf-5", title = "bbb 5", lastUpdated = millisToPosix 1}
-  , { uid = "edf-6", title = "bbb 6", lastUpdated = millisToPosix 1}
-  , { uid = "edf-7", title = "bbb 7", lastUpdated = millisToPosix 1}
-  , { uid = "edf-8", title = "bbb 8", lastUpdated = millisToPosix 1}
-  , { uid = "edf-9", title = "bbb 9", lastUpdated = millisToPosix 1}
-  , { uid = "edf-10", title = "bbb 10", lastUpdated = millisToPosix 1}
-  , { uid = "edf-11", title = "bbb 11", lastUpdated = millisToPosix 1}
-  , { uid = "edf-12", title = "bbb 12", lastUpdated = millisToPosix 1}
-  ]
+dummyTasks = []
+  -- [ { uid = "abc-0", title = "aaa 0", lastUpdated = millisToPosix 1}
+  -- , { uid = "edf-1", title = "bbb 1", lastUpdated = millisToPosix 1}
+  -- , { uid = "edf-2", title = "bbb 2", lastUpdated = millisToPosix 1}
+  -- , { uid = "edf-3", title = "bbb 3", lastUpdated = millisToPosix 1}
+  -- , { uid = "edf-4", title = "bbb 4", lastUpdated = millisToPosix 1}
+  -- , { uid = "edf-5", title = "bbb 5", lastUpdated = millisToPosix 1}
+  -- , { uid = "edf-6", title = "bbb 6", lastUpdated = millisToPosix 1}
+  -- , { uid = "edf-7", title = "bbb 7", lastUpdated = millisToPosix 1}
+  -- , { uid = "edf-8", title = "bbb 8", lastUpdated = millisToPosix 1}
+  -- , { uid = "edf-9", title = "bbb 9", lastUpdated = millisToPosix 1}
+  -- , { uid = "edf-10", title = "bbb 10", lastUpdated = millisToPosix 1}
+  -- , { uid = "edf-11", title = "bbb 11", lastUpdated = millisToPosix 1}
+  -- , { uid = "edf-12", title = "bbb 12", lastUpdated = millisToPosix 1}
+  -- ]
 
 updateTaskList : TaskListMsg -> TaskListModel -> ( TaskListModel, Cmd TaskListMsg )
 updateTaskList msg model =

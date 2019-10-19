@@ -1,6 +1,7 @@
 import { Elm } from '../Elm/Main.elm'
 
 import { TaskItem } from '../models/task-item'
+import { ChangeEvent } from '../services/database/types';
 
 interface InitArgs {
     node?: HTMLElement;
@@ -40,5 +41,10 @@ export class ElmAppAdapter {
     // createdNewItem
     createdNewItem(newItem: TaskItem) : void {
         this.app.ports.createdNewItem.send(newItem)
+    }
+
+    // updatedItems
+    updatedItems(newItems: Array<[ChangeEvent, TaskItem]>) : void {
+        this.app.ports.updatedItems.send(newItems)
     }
 }

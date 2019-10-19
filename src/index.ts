@@ -29,7 +29,10 @@ auth.subscribe(async ({user, status}) => {
   console.log("getIndex", items)
 
   }
-  db.subscribe(newItems => console.log("subscribe", newItems))
+  db.subscribe(newItems => {
+    console.log("subscribe", newItems)
+    app.updatedItems(newItems)
+  })
 })
 
 app.logout(() => {
