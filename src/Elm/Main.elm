@@ -114,8 +114,10 @@ update msg model =
     RequestByList taskListMsg ->
       case taskListMsg of
         DidItItem uid -> (model, patchItemDidIt uid)
-        --DidItItem uid -> (model, patchItemDidIt (Debug.log "main did it" uid))
-        _ -> (model, Cmd.none)
+        _ -> ({ model
+              | taskListState = updateTaskList taskListMsg model.taskListState |> first
+              }
+              , Cmd.none)
 
     UpdatedItems result ->
       case result of

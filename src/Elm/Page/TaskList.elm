@@ -25,6 +25,7 @@ type TaskListMsg = DeleteItem Uid
                  | UpdatedItems (List ChangeEvent)
                  | UpdatedNow Posix
                  | OpenMenu TaskItemRe
+                 | CloseAllMenu
 
 
 type alias TaskListModel =
@@ -50,9 +51,13 @@ updateTaskList msg model =
     UpdatedNow now ->
       ({ model
        | now = now
-      --  | now = Debug.log "now" now
        , items = List.map (updateRelative model.now) model.items
-       }  , Cmd.none)
+       } , Cmd.none)
+    OpenMenu target ->
+      ({ model
+      | items = List.map (\item -> { item | isMenuOpened = target == item }) model.items
+
+      } , Cmd.none)
     _ -> (model, Cmd.none)
 
 updateRelative : Posix -> TaskItemRe -> TaskItemRe
@@ -122,7 +127,9 @@ itemCardViewHeader itemRe =
             [ class "dropdown-trigger" ]
             [ div
                 [class ""]
-                [ a [ class "card-header-icon" ]
+                [ a [ class "card-header-icon"
+                    , onClick <| OpenMenu itemRe
+                    ]
                     [ ionIcon "ios-arrow-dropdown" ]
                 ]
             ]
