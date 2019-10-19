@@ -17,6 +17,7 @@ export class FireStoreDatabase implements IDataBaseService {
   db = firebase.firestore()
   fs = firebase.functions()
   callCreateTaskItem = this.fs.httpsCallable('createTaskItem')
+  callPatchTaskItemDidIt = this.fs.httpsCallable('updateTaskItemDidIt')
 
   private _unsubscribe : () => void = () => { }
 
@@ -28,6 +29,12 @@ export class FireStoreDatabase implements IDataBaseService {
   @catchLogAsync
   async createTaskItem(title: string): Promise<any> {
     return this.callCreateTaskItem(title)
+    
+  }
+  
+  @catchLogAsync
+  async patchTaskItemDidIt(taskUid: string): Promise<any> {
+    return this.callPatchTaskItemDidIt(taskUid)
     
   }
 

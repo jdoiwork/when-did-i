@@ -8,6 +8,10 @@ export class NullDatabase implements IDataBaseService {
     return { data: "null database" }
   }
 
+  async patchTaskItemDidIt(taskUid: string): Promise<any> {
+    return { data: "null database"}
+  }
+
   subscribe(_callback: (items: Array<[ChangeEvent, TaskItem]>) => void) : void {
     
   }

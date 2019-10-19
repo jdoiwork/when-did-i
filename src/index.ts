@@ -49,7 +49,7 @@ app.postNewItem(async title => {
 })
 
 app.patchItemDidIt(uid => {
-  console.log("patch did it", uid)
+  db.patchTaskItemDidIt(uid).then(console.log).catch(e => console.error)
 })
 
 window["app"] = app
