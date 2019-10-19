@@ -94,7 +94,11 @@ update msg model =
           cmd = if key == "logout" && model.url.path == "/login"
                   then Cmd.none
                   else Nav.pushUrl model.key "/"
-      in ( { model | login = login }, cmd )
+      in ({ model
+          | login = login
+          , topNavState = navInit
+          , taskListState = taskListInit
+          }, cmd )
 
     RequestLogin provider ->
       ( model, loginWith <| E.string "google")
