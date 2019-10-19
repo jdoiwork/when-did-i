@@ -66,3 +66,11 @@ export const createTaskItem = createOnCall(async (request, context) => {
   const item = await TaskItemService.createItem(request, authInfo)
   return { message: "task item created", item: item }
 })
+
+export const updateTaskItemDidIt = createOnCall(async (request, context) => {
+  const authInfo = await authorize(context)
+  console.log("updateDidIt", request)
+  
+  const item = await TaskItemService.updateDidIt(request, authInfo)
+  return { message: "task item created", item: item }
+})
