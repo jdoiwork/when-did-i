@@ -4,6 +4,7 @@ module Page.TaskList exposing
   , taskListInit
   , taskListUpdate
   , TaskListMsg(..)
+  , updateTaskList
   )
 
 import Html exposing (..)
@@ -20,7 +21,12 @@ import Model.TaskItem exposing (..)
 type TaskListMsg = DeleteItem Uid
                  | EditItem Uid
                  | DidItItem Uid
-                 | CreatedItem TaskItem
+                 | CreateItem TaskItem
+                 | UpdatedItems (List ChangeEvent)
+
+type ChangeEvent = CreatedItem TaskItem
+                 | UpdatedItem TaskItem
+                 | DeletedItem TaskItem
 
 type alias TaskListModel =
   { items : List TaskItem
@@ -46,10 +52,26 @@ dummyTasks =
   , { uid = "edf-12", title = "bbb 12", lastUpdated = millisToPosix 1}
   ]
 
+updateTaskList : TaskListMsg -> TaskListModel -> ( TaskListModel, Cmd TaskListMsg )
+updateTaskList msg model =
+  case msg of
+    UpdatedItems ces -> ({model | items = mergeItems ces model.items}, Cmd.none)
+    _ -> (model, Cmd.none)
+
+
+mergeItems : List ChangeEvent -> List TaskItem -> List TaskItem
+mergeItems ces ts =
+  case ces of
+    [] -> ts
+    (ce:: ces_) -> case ce of
+      CreatedItem item -> item :: (mergeItems ces_ ts)
+      UpdatedItem item -> List.map (\t -> if t.uid == item.uid && t /= item then item else t) ts |> mergeItems ces_
+      DeletedItem item -> List.filter (\t -> t.uid == item.uid) ts |> mergeItems ces_
+
 taskListUpdate : TaskListModel -> TaskListMsg -> (TaskListModel, Cmd TaskListMsg)
 taskListUpdate model msg =
   case msg of
-    CreatedItem newItem ->
+    CreateItem newItem ->
       let newItems = newItem :: model.items
       in ({ items = newItems }, Cmd.none)
     _ -> (model, Cmd.none)

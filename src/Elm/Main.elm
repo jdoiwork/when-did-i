@@ -58,6 +58,7 @@ type Msg
   | RequestTopNavMsg NavMsg
   | PostNewItem String
   | CreatedNewItem (Result D.Error TaskItem)
+  | UpdatedItems (Result D.Error (List (String, TaskItem)))
   | ClickBody
   | Ignore
 
@@ -105,12 +106,13 @@ update msg model =
       case resultNewItem of
         Err error -> (model, Cmd.none)
         Ok newItem ->
-          let (taskListState, _) = taskListUpdate model.taskListState <| CreatedItem newItem
+          let (taskListState, _) = taskListUpdate model.taskListState <| Page.TaskList.CreateItem newItem
           in ({ model
               | taskListState = taskListState
               , topNavState = navInit }
               , Cmd.none)
-
+    UpdatedItems items ->
+      (model, Cmd.none)
     ClickBody ->
       let (navModel, _) = navUpdate ClickOutSideNav model.topNavState
       in ({model | topNavState = navModel}, Cmd.none)
@@ -122,17 +124,21 @@ port loginWith : E.Value -> Cmd msg
 port logout : () -> Cmd msg
 port postNewItem : String -> Cmd msg
 port createdNewItem : (D.Value -> msg) -> Sub msg
-
+port updatedItems : (D.Value -> msg) -> Sub msg
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.batch
     [ loginStatusChanged LoginStatusChanged
     , createdNewItem convertNewItemWithValue
+    , updatedItems convertUpdatedItems
     ]
 
 convertNewItemWithValue : D.Value -> Msg
 convertNewItemWithValue value = value |> decodeTaskItem |> CreatedNewItem
+
+convertUpdatedItems : D.Value -> Msg
+convertUpdatedItems value = Ignore
 
 -- VIEWS
 
@@ -181,7 +187,7 @@ mapNavView model navView =
 convertNavMsg : NavMsg -> Msg
 convertNavMsg nav =
   case nav of
-    CreateItem didItNow -> PostNewItem didItNow
+    Page.Nav.CreateItem didItNow -> PostNewItem didItNow
     _ -> RequestTopNavMsg nav
 
 loginStatus : Model -> Html Msg
