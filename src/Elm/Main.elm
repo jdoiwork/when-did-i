@@ -97,7 +97,7 @@ update msg model =
       in ({ model
           | login = login
           , topNavState = navInit
-          , taskListState = taskListInit
+          , taskListState = {taskListInit | now = model.taskListState.now}
           }, cmd )
 
     RequestLogin provider ->
