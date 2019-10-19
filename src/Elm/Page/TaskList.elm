@@ -28,10 +28,11 @@ type TaskListMsg = DeleteItem Uid
 
 type alias TaskListModel =
   { items : List TaskItem
+  , now : Posix
   }
 
 taskListInit : TaskListModel
-taskListInit = { items = [] }
+taskListInit = { items = [], now = millisToPosix 0 }
 
 updateTaskList : TaskListMsg -> TaskListModel -> ( TaskListModel, Cmd TaskListMsg )
 updateTaskList msg model =
@@ -54,7 +55,7 @@ taskListUpdate model msg =
   case msg of
     CreateItem newItem ->
       let newItems = newItem :: model.items
-      in ({ items = newItems }, Cmd.none)
+      in ({ model | items = newItems }, Cmd.none)
     _ -> (model, Cmd.none)
 
 listView : TaskListModel -> Html TaskListMsg
