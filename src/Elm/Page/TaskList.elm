@@ -97,11 +97,7 @@ itemCardView itemRe =
   let item = itemRe.item in
   div
     [ class "card", id item.uid ]
-    [ header
-        [class "card-header"]
-        [ p [ class "card-header-title" ] [ text item.title]
-        , a [ class "card-header-icon"] [ span [ class "icon"] [ i [class "ion ion-ios-arrow-dropdown"] []]]
-        ]
+    [ lazy itemCardViewHeader item
     , div
         [ class "card-content"]
         [ text <| formatTime utc item.lastUpdated
@@ -131,6 +127,14 @@ itemCardView itemRe =
 
             ]
         ]
+    ]
+
+itemCardViewHeader : TaskItem -> Html TaskListMsg
+itemCardViewHeader item =
+  header
+    [class "card-header"]
+    [ p [ class "card-header-title" ] [ text item.title]
+    , a [ class "card-header-icon"] [ span [ class "icon"] [ i [class "ion ion-ios-arrow-dropdown"] []]]
     ]
 
 actionButton : String -> List (Attribute a) -> String -> Html a
