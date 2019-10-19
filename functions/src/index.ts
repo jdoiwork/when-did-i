@@ -34,17 +34,6 @@ export const err = functions.https.onCall(async (data: any, context: CallableCon
   throw error403()
 })
 
-const createOnCall = (f : (data: any, context: CallableContext) => any) => functions.https.onCall(f)
-
-// export const createTaskItem = functions.https.onCall(async (data, context) => {
-export const createTaskItem = createOnCall(async (request, context) => {
-  const authInfo = await authorize(context)
-  console.log("createTaskItem", request)
-  
-  const item = await TaskItemService.createItem(request, authInfo)
-  return { message: "task item created", item: item }
-})
-
 export const createHelloItem = functions.https.onRequest(async (req, res) => {
   try {
     const db = admin.firestore()
@@ -64,4 +53,16 @@ export const createHelloItem = functions.https.onRequest(async (req, res) => {
     })
   }
 
+})
+
+// -------------------------------------------------------- for Task Items
+
+const createOnCall = (f : (data: any, context: CallableContext) => any) => functions.https.onCall(f)
+
+export const createTaskItem = createOnCall(async (request, context) => {
+  const authInfo = await authorize(context)
+  console.log("createTaskItem", request)
+  
+  const item = await TaskItemService.createItem(request, authInfo)
+  return { message: "task item created", item: item }
 })

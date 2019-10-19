@@ -17,21 +17,23 @@ export async function createItem(title : string, auth: AuthInfo) {
       .collection('tasks')
     
     const uid = tasks.doc().id
+    console.log("createItem::tasks new ID", uid)
+
     const newItem = {
       uid,
       title,
       lastUpdated: Date.now(),
     }
+
+    console.log("createItem::set newItem", newItem)
     await tasks.doc(uid).set(newItem)
     
+    console.log(`createItem::set completed: ${uid}`)
     return newItem
-      // await doc.update({ uid: doc.id })
-      // const snap = await doc.get()
-      // return snap.data()
 
   } catch (e) {
-    console.error("Exception:!!!! createItem", e)
-    throw new HttpsError('internal', e.message, { title, auth })
+    console.error("Exception:!!!! createItem", { error:e, title, auth})
+    throw new HttpsError('unknown', e.message, { title, auth })
   }
   
 }
