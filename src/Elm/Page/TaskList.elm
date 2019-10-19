@@ -109,22 +109,23 @@ itemCardViewHeader : TaskItem -> Html TaskListMsg
 itemCardViewHeader item =
   header
     [class "card-header"]
-    [ p [ class "card-header-title" ] [ text item.title]
+    [ p [ class "card-header-title" ] [ text item.title ]
     --, a [ class "card-header-icon"] [ span [ class "icon"] [ i [class "ion ion-ios-arrow-dropdown"] []]]
     , div
-        [class "dropdown is-active_"]
+        [class "dropdown is-right is-active_"]
         [ div
             [ class "dropdown-trigger" ]
             [ div
                 [class ""]
-                [ a [ class "card-header-icon"] [ span [ class "icon"] [ i [class "ion ion-ios-arrow-dropdown"] []]]]
+                [ a [ class "card-header-icon"]
+                    [ span [ class "icon" ] [ i [class "ion ion-ios-arrow-dropdown"] []]]]
             ]
         , div
             [ class "dropdown-menu" ]
             [ div
                 [ class "dropdown-content" ]
-                [ a [ class "dropdown-item" ] [ text "aaa"]
-                , a [ class "dropdown-item" ] [ text "bbb"]
+                [ a [ class "dropdown-item", attribute "disabled" ""] [ ionIcon "ios-create", text "Edit" ]
+                , a [ class "dropdown-item" ] [ ionIcon "ios-trash", text "Delete" ]
                 ]
             ]
         ]
@@ -166,8 +167,12 @@ actionButton : String -> List (Attribute a) -> String -> Html a
 actionButton iconName attrs content =
   button
     ([ class "button is-rounded is-small" ] ++ attrs)
-    [ span
-        [ class "icon is-large" ]
-        [ i [class "icon", class <| "ion-" ++ iconName] []]
+    [ ionIcon iconName
     , span [] [ text content]
     ]
+
+ionIcon : String -> Html a
+ionIcon iconName =
+  span [ class "icon" ]
+    [ i [class "icon", class <| "ion-" ++ iconName]
+      []]
