@@ -94,7 +94,7 @@ mergeItems now ces ts =
     (ce:: ces_) -> case ce of
       CreatedItem item -> mkTaskItemRe now item :: (mergeItems now ces_ ts)
       UpdatedItem item -> List.map (\t -> if t.item.uid == item.uid && t.item /= item then mkTaskItemRe now item else t) ts |> mergeItems now ces_
-      DeletedItem item -> List.filter (\t -> t.item.uid == item.uid) ts |> mergeItems now ces_
+      DeletedItem item -> List.filter (\t -> t.item.uid /= item.uid) ts |> mergeItems now ces_
 
 listView : TaskListModel -> Html TaskListMsg
 listView model =
