@@ -117,8 +117,8 @@ itemCardViewContent : TaskItemRe -> Html TaskListMsg
 itemCardViewContent itemRe =
   div
     [ class "card-content"]
-    [ text <| formatTime utc itemRe.item.lastUpdated
-    , text itemRe.relative
+    [ p [ class "title" ] [text itemRe.relative]
+    , p [ class "subtitle"] [text <| formatTime utc itemRe.item.lastUpdated]
     ]
 
 itemCardViewFooter : Html TaskListMsg
