@@ -34,6 +34,7 @@ type alias TaskListModel =
 type alias TaskItemRe =
   { item : TaskItem
   , relative : String
+  , isMenuOpened: Bool
   }
 
 taskListInit : TaskListModel
@@ -61,7 +62,10 @@ updateRelative now itemRe =
         else itemRe
 
 mkTaskItemRe : Posix -> TaskItem -> TaskItemRe
-mkTaskItemRe now item = { item = item, relative = formatTimeRe now item.lastUpdated }
+mkTaskItemRe now item = { item = item
+                        , relative = formatTimeRe now item.lastUpdated
+                        , isMenuOpened = False
+                        }
 
 mergeItems : Posix -> List ChangeEvent -> List TaskItemRe -> List TaskItemRe
 mergeItems now ces ts =
@@ -100,19 +104,19 @@ itemCardView itemRe =
     [ class "card"
     , id item.uid ]
     -- elements
-    [ lazy itemCardViewHeader item
+    [ lazy itemCardViewHeader itemRe
     , lazy itemCardViewContent itemRe
     , itemCardViewFooter item
     ]
 
-itemCardViewHeader : TaskItem -> Html TaskListMsg
-itemCardViewHeader item =
+itemCardViewHeader : TaskItemRe -> Html TaskListMsg
+itemCardViewHeader itemRe =
+  let item = itemRe.item in
   header
     [class "card-header"]
     [ p [ class "card-header-title" ] [ text item.title ]
-    --, a [ class "card-header-icon"] [ span [ class "icon"] [ i [class "ion ion-ios-arrow-dropdown"] []]]
     , div
-        [class "dropdown is-right is-active_"]
+        [class "dropdown is-right", classList [("is-active", itemRe.isMenuOpened)]]
         [ div
             [ class "dropdown-trigger" ]
             [ div
@@ -125,7 +129,7 @@ itemCardViewHeader item =
             [ div
                 [ class "dropdown-content" ]
                 [ a [ class "dropdown-item", attribute "disabled" ""] [ ionIcon "ios-create", text "Edit" ]
-                , a [ class "dropdown-item" ] [ ionIcon "ios-trash", text "Delete" ]
+                , a [ class "dropdown-item has-text-danger" ] [ ionIcon "ios-trash", text "Delete" ]
                 ]
             ]
         ]
