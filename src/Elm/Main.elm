@@ -9,6 +9,8 @@ import Html.Lazy exposing (..)
 import Json.Encode as E
 import Json.Decode as D
 import Url
+import Task
+import Time
 
 import Page.Nav exposing (..)
 import Page.Welcome exposing (..)
@@ -97,11 +99,18 @@ update msg model =
     RequestTopNavMsg navMsg ->
       case navMsg of
         Logout -> ({model | topNavState = navInit }, logout ())
+        Page.Nav.CreateItem title ->
+          let (navModel, _) = navUpdate navMsg model.topNavState
+          in ({model | topNavState = navModel},
+            Task.perform (\_ -> PostNewItem title) Time.now
+            )
         _ ->
           let (navModel, _) = navUpdate navMsg model.topNavState
           in ({model | topNavState = navModel}, Cmd.none)
+
     PostNewItem didItNow ->
-      (model, postNewItem model.topNavState.didItNow)
+      (model, postNewItem didItNow)
+
     CreatedNewItem resultNewItem ->
       case resultNewItem of
         Err error -> (model, Cmd.none)
@@ -111,16 +120,19 @@ update msg model =
               | taskListState = taskListState
               , topNavState = navInit }
               , Cmd.none)
+
     UpdatedItems result ->
       case result of
         Ok items ->
           let (newTaskList, _) = updateTaskList (Page.TaskList.UpdatedItems items) model.taskListState 
           in ({ model | taskListState = newTaskList }, Cmd.none)
         _ -> (model, Cmd.none)
+
     ClickBody ->
       let (navModel, _) = navUpdate ClickOutSideNav model.topNavState
       in ({model | topNavState = navModel}, Cmd.none)
     Ignore -> (model, Cmd.none)
+
 -- SUBSCRIPTIONS
 
 port loginStatusChanged : (String -> msg) -> Sub msg
@@ -186,13 +198,7 @@ showIndex model =
 
 mapNavView : Model -> (NavModel -> Html NavMsg) -> Html Msg
 mapNavView model navView =
-  Html.map convertNavMsg <| lazy navView model.topNavState
-
-convertNavMsg : NavMsg -> Msg
-convertNavMsg nav =
-  case nav of
-    Page.Nav.CreateItem didItNow -> PostNewItem didItNow
-    _ -> RequestTopNavMsg nav
+  Html.map RequestTopNavMsg <| lazy navView model.topNavState
 
 loginStatus : Model -> Html Msg
 loginStatus model =
@@ -211,5 +217,4 @@ loggedInView : Model -> Html Msg
 loggedInView model =
   div []
     [ Html.map (\_ -> Ignore) <| listView model.taskListState
-    --, button [ class "button", onClick <| RequestLogout ] [text "Logout"]
     ]

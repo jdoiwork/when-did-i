@@ -30,6 +30,7 @@ navUpdate msg model =
     ToggleIsActive -> ({model | isActive = not model.isActive}, Cmd.none)
     ClickOutSideNav -> ({model | isActive = False}, Cmd.none)
     InputDidItNow didItNow -> ({model | didItNow = didItNow}, Cmd.none)
+    CreateItem _ -> ({ model | didItNow = "" }, Cmd.none)
     _ -> (model, Cmd.none)
 
 topNavView : NavModel -> Html NavMsg
