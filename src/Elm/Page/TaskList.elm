@@ -2,7 +2,6 @@ module Page.TaskList exposing
   ( listView
   , TaskListModel
   , taskListInit
-  , taskListUpdate
   , TaskListMsg(..)
   , updateTaskList
   )
@@ -24,11 +23,17 @@ type TaskListMsg = DeleteItem Uid
                  | DidItItem Uid
                  | CreateItem TaskItem
                  | UpdatedItems (List ChangeEvent)
+                 | UpdatedNow Posix
 
 
 type alias TaskListModel =
-  { items : List TaskItem
+  { items : List TaskItemRe
   , now : Posix
+  }
+
+type alias TaskItemRe =
+  { item : TaskItem
+  , relative : String
   }
 
 taskListInit : TaskListModel
@@ -37,48 +42,47 @@ taskListInit = { items = [], now = millisToPosix 0 }
 updateTaskList : TaskListMsg -> TaskListModel -> ( TaskListModel, Cmd TaskListMsg )
 updateTaskList msg model =
   case msg of
-    UpdatedItems ces -> ({model | items = mergeItems ces model.items}, Cmd.none)
+    UpdatedItems ces ->
+      let newModels = mergeItems ces model.items
+      in ({model | items = newModels }, Cmd.none)
+    UpdatedNow now -> ({ model | now = now }  , Cmd.none)
     _ -> (model, Cmd.none)
 
+mkTaskItemRe : TaskItem -> TaskItemRe
+mkTaskItemRe item = { item = item, relative = "relative time" }
 
-mergeItems : List ChangeEvent -> List TaskItem -> List TaskItem
+mergeItems : List ChangeEvent -> List TaskItemRe -> List TaskItemRe
 mergeItems ces ts =
   case ces of
     [] -> ts
     (ce:: ces_) -> case ce of
-      CreatedItem item -> item :: (mergeItems ces_ ts)
-      UpdatedItem item -> List.map (\t -> if t.uid == item.uid && t /= item then item else t) ts |> mergeItems ces_
-      DeletedItem item -> List.filter (\t -> t.uid == item.uid) ts |> mergeItems ces_
-
-taskListUpdate : TaskListModel -> TaskListMsg -> (TaskListModel, Cmd TaskListMsg)
-taskListUpdate model msg =
-  case msg of
-    CreateItem newItem ->
-      let newItems = newItem :: model.items
-      in ({ model | items = newItems }, Cmd.none)
-    _ -> (model, Cmd.none)
+      CreatedItem item -> mkTaskItemRe item :: (mergeItems ces_ ts)
+      UpdatedItem item -> List.map (\t -> if t.item.uid == item.uid && t.item /= item then mkTaskItemRe item else t) ts |> mergeItems ces_
+      DeletedItem item -> List.filter (\t -> t.item.uid == item.uid) ts |> mergeItems ces_
 
 listView : TaskListModel -> Html TaskListMsg
 listView model =
   section [class "section"] <| [gridListView model.items]
 
-gridListView : List TaskItem -> Html TaskListMsg
+gridListView : List TaskItemRe -> Html TaskListMsg
 gridListView xs =
   div [ class "container"]
-    [ Keyed.node "div" [ class "columns is-multiline" ] <| List.map (\x -> (x.uid, lazy columnView x)) xs
+    [ Keyed.node "div" [ class "columns is-multiline" ] <|
+      List.map (\x -> (x.item.uid, lazy columnView x)) xs
     ]
   
 
-columnView : TaskItem -> Html TaskListMsg
+columnView : TaskItemRe -> Html TaskListMsg
 columnView item =
   div [ class "column is-4"] [itemView item]
 
-itemView : TaskItem -> Html TaskListMsg
+itemView : TaskItemRe -> Html TaskListMsg
 itemView item =
   div [class ""] [itemCardView item]
 
-itemCardView : TaskItem -> Html TaskListMsg
-itemCardView item =
+itemCardView : TaskItemRe -> Html TaskListMsg
+itemCardView itemRe =
+  let item = itemRe.item in
   div
     [ class "card", id item.uid ]
     [ header
@@ -88,7 +92,9 @@ itemCardView item =
         ]
     , div
         [ class "card-content"]
-        [ text <| formatTime utc item.lastUpdated ]
+        [ text <| formatTime utc item.lastUpdated
+        , text itemRe.relative
+        ]
     , footer
         [ class "card-footer"
         , style "justify-content" "center"

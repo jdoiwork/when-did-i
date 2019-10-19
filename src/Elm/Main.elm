@@ -9,6 +9,8 @@ import Html.Lazy exposing (..)
 import Json.Encode as E
 import Json.Decode as D
 import Url
+import Time exposing (Posix)
+import Tuple exposing (first)
 
 import Page.Nav exposing (..)
 import Page.Welcome exposing (..)
@@ -58,9 +60,10 @@ type Msg
   | LoginStatusChanged String
   | RequestLogin Page.Login.AuthProvider
   | RequestTopNavMsg NavMsg
-  | CreatedNewItem (Result D.Error TaskItem)
+  -- | CreatedNewItem (Result D.Error TaskItem)
   | UpdatedItems (Result D.Error (List ChangeEvent))
   | ClickBody
+  | Tick Posix
   | Ignore
 
 
@@ -107,15 +110,15 @@ update msg model =
           let (navModel, _) = navUpdate navMsg model.topNavState
           in ({model | topNavState = navModel}, Cmd.none)
 
-    CreatedNewItem resultNewItem ->
-      case resultNewItem of
-        Err error -> (model, Cmd.none)
-        Ok newItem ->
-          let (taskListState, _) = taskListUpdate model.taskListState <| Page.TaskList.CreateItem newItem
-          in ({ model
-              | taskListState = taskListState
-              , topNavState = navInit }
-              , Cmd.none)
+    -- CreatedNewItem resultNewItem ->
+    --   case resultNewItem of
+    --     Err error -> (model, Cmd.none)
+    --     Ok newItem ->
+    --       let (taskListState, _) = taskListUpdate model.taskListState <| Page.TaskList.CreateItem newItem
+    --       in ({ model
+    --           | taskListState = taskListState
+    --           , topNavState = navInit }
+    --           , Cmd.none)
 
     UpdatedItems result ->
       case result of
@@ -123,6 +126,12 @@ update msg model =
           let (newTaskList, _) = updateTaskList (Page.TaskList.UpdatedItems items) model.taskListState 
           in ({ model | taskListState = newTaskList }, Cmd.none)
         _ -> (model, Cmd.none)
+
+    Tick now -> 
+      ( { model
+        | taskListState = updateTaskList (UpdatedNow now) model.taskListState |> first
+        }
+      , Cmd.none)
 
     ClickBody ->
       let (navModel, _) = navUpdate ClickOutSideNav model.topNavState
@@ -142,12 +151,13 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.batch
     [ loginStatusChanged LoginStatusChanged
-    , createdNewItem convertNewItemWithValue
+    -- , createdNewItem convertNewItemWithValue
     , updatedItems convertUpdatedItems
+    , Time.every 5000 Tick -- every 5 sec
     ]
 
-convertNewItemWithValue : D.Value -> Msg
-convertNewItemWithValue value = value |> decodeTaskItem |> CreatedNewItem
+-- convertNewItemWithValue : D.Value -> Msg
+-- convertNewItemWithValue value = value |> decodeTaskItem |> CreatedNewItem
 
 convertUpdatedItems : D.Value -> Msg
 convertUpdatedItems value = value |> decodeUpdatedItems |> UpdatedItems

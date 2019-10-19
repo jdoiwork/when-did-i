@@ -2,6 +2,7 @@ module Helper.Format exposing (..)
 
 import Time exposing (Posix, Zone)
 import DateFormat as DF
+import DateFormat.Relative as DF
 
 -- yyyy-MM-dd HH:mm:ss
 tokenList : List DF.Token
@@ -21,5 +22,7 @@ tokenList =
 
 formatTime : Zone -> Posix -> String
 formatTime = DF.format tokenList
-
 -- DF.format : List Token -> Zone -> Posix -> String
+
+formatTimeRe : Posix -> Posix -> String
+formatTimeRe = DF.relativeTime
