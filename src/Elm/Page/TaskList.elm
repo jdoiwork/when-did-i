@@ -161,7 +161,10 @@ itemCardViewHeader itemRe =
             [ div
                 [ class "dropdown-content" ]
                 [ a [ class "dropdown-item", attribute "disabled" ""] [ ionIcon "ios-create", text "Edit" ]
-                , a [ class "dropdown-item has-text-danger" ] [ ionIcon "ios-trash", text "Delete" ]
+                , a [ class "dropdown-item has-text-danger"
+                    , onClick <| DeleteItem item.uid
+                    ]
+                    [ ionIcon "ios-trash", text "Delete" ]
                 ]
             ]
         ]

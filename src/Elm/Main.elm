@@ -114,6 +114,7 @@ update msg model =
     RequestByList taskListMsg ->
       case taskListMsg of
         DidItItem uid -> (model, patchItemDidIt uid)
+        DeleteItem uid -> (model, deleteItem uid)
         _ -> ({ model
               | taskListState = updateTaskList taskListMsg model.taskListState |> first
               }
@@ -146,6 +147,7 @@ port loginWith : E.Value -> Cmd msg
 port logout : () -> Cmd msg
 port postNewItem : String -> Cmd msg
 port patchItemDidIt : String -> Cmd msg
+port deleteItem : String -> Cmd msg
 
 port createdNewItem : (D.Value -> msg) -> Sub msg
 port updatedItems : (D.Value -> msg) -> Sub msg
