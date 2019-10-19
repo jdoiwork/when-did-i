@@ -43,22 +43,34 @@ updateTaskList : TaskListMsg -> TaskListModel -> ( TaskListModel, Cmd TaskListMs
 updateTaskList msg model =
   case msg of
     UpdatedItems ces ->
-      let newModels = mergeItems ces model.items
+      let newModels = mergeItems model.now ces model.items
       in ({model | items = newModels }, Cmd.none)
-    UpdatedNow now -> ({ model | now = now }  , Cmd.none)
+    UpdatedNow now ->
+      ({ model
+       | now = now
+      --  | now = Debug.log "now" now
+       , items = List.map (updateRelative model.now) model.items
+       }  , Cmd.none)
     _ -> (model, Cmd.none)
 
-mkTaskItemRe : TaskItem -> TaskItemRe
-mkTaskItemRe item = { item = item, relative = "relative time" }
+updateRelative : Posix -> TaskItemRe -> TaskItemRe
+updateRelative now itemRe =
+  let newRelative = formatTimeRe now itemRe.item.lastUpdated
+  in if itemRe.relative /= newRelative
+        then { itemRe | relative = newRelative}
+        else itemRe
 
-mergeItems : List ChangeEvent -> List TaskItemRe -> List TaskItemRe
-mergeItems ces ts =
+mkTaskItemRe : Posix -> TaskItem -> TaskItemRe
+mkTaskItemRe now item = { item = item, relative = formatTimeRe now item.lastUpdated }
+
+mergeItems : Posix -> List ChangeEvent -> List TaskItemRe -> List TaskItemRe
+mergeItems now ces ts =
   case ces of
     [] -> ts
     (ce:: ces_) -> case ce of
-      CreatedItem item -> mkTaskItemRe item :: (mergeItems ces_ ts)
-      UpdatedItem item -> List.map (\t -> if t.item.uid == item.uid && t.item /= item then mkTaskItemRe item else t) ts |> mergeItems ces_
-      DeletedItem item -> List.filter (\t -> t.item.uid == item.uid) ts |> mergeItems ces_
+      CreatedItem item -> mkTaskItemRe now item :: (mergeItems now ces_ ts)
+      UpdatedItem item -> List.map (\t -> if t.item.uid == item.uid && t.item /= item then mkTaskItemRe now item else t) ts |> mergeItems now ces_
+      DeletedItem item -> List.filter (\t -> t.item.uid == item.uid) ts |> mergeItems now ces_
 
 listView : TaskListModel -> Html TaskListMsg
 listView model =
