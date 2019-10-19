@@ -35,6 +35,7 @@
     "typescript": "^3.6.4"
   },
   "dependencies": {
+    "@google-cloud/firestore": "^2.4.0",
     "@types/firebase": "^3.2.1",
     "bulma": "^0.7.5",
     "firebase": "^7.2.0"

@@ -9,8 +9,12 @@ export class NullDatabase implements IDataBaseService {
     return { data: "null database" }
   }
 
-  subscribe(callback) : void {
+  subscribe(_callback) : void {
     
+  }
+
+  unsubscribe() : void {
+
   }
 }
 
