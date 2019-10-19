@@ -102,7 +102,7 @@ itemCardView itemRe =
     -- elements
     [ lazy itemCardViewHeader item
     , lazy itemCardViewContent itemRe
-    , itemCardViewFooter
+    , itemCardViewFooter item
     ]
 
 itemCardViewHeader : TaskItem -> Html TaskListMsg
@@ -121,8 +121,8 @@ itemCardViewContent itemRe =
     , p [ class "subtitle"] [text <| formatTime utc itemRe.item.lastUpdated]
     ]
 
-itemCardViewFooter : Html TaskListMsg
-itemCardViewFooter =
+itemCardViewFooter : TaskItem -> Html TaskListMsg
+itemCardViewFooter item =
   footer
     -- footer attrs
     [ class "card-footer"
@@ -135,7 +135,11 @@ itemCardViewFooter =
         -- p elements
         [ div
             [ class "buttons"]
-            [ actionButton "ios-checkmark-circle-outline" [ class "is-primary"] "More"
+            [ actionButton "ios-checkmark-circle-outline"
+                [ class "is-primary"
+                , onClick <| DidItItem item.uid
+                ]
+                "More"
             ]
         ]
     ]

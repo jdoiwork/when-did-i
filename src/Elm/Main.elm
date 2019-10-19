@@ -62,6 +62,7 @@ type Msg
   | RequestLogin Page.Login.AuthProvider
   | RequestTopNavMsg NavMsg
   | UpdatedItems (Result D.Error (List ChangeEvent))
+  | RequestByList TaskListMsg
   | ClickBody
   | Tick Posix
   | Ignore
@@ -110,15 +111,10 @@ update msg model =
           let (navModel, _) = navUpdate navMsg model.topNavState
           in ({model | topNavState = navModel}, Cmd.none)
 
-    -- CreatedNewItem resultNewItem ->
-    --   case resultNewItem of
-    --     Err error -> (model, Cmd.none)
-    --     Ok newItem ->
-    --       let (taskListState, _) = taskListUpdate model.taskListState <| Page.TaskList.CreateItem newItem
-    --       in ({ model
-    --           | taskListState = taskListState
-    --           , topNavState = navInit }
-    --           , Cmd.none)
+    RequestByList taskListMsg ->
+      case taskListMsg of
+        DidItItem uid -> (model, patchItemDidIt uid)
+        _ -> (model, Cmd.none)
 
     UpdatedItems result ->
       case result of
@@ -144,6 +140,8 @@ port loginStatusChanged : (String -> msg) -> Sub msg
 port loginWith : E.Value -> Cmd msg
 port logout : () -> Cmd msg
 port postNewItem : String -> Cmd msg
+port patchItemDidIt : String -> Cmd msg
+
 port createdNewItem : (D.Value -> msg) -> Sub msg
 port updatedItems : (D.Value -> msg) -> Sub msg
 
