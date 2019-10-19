@@ -38,7 +38,6 @@ async function signIn() : Promise<void> {
     }
 }
 
-type UserCallback = (user: firebase.User | null) => void;
 type AuthCallback = (authInfo: { user: firebase.User | null, status: Status}) => void;
 
 function subscribe(callback: AuthCallback) : void {
