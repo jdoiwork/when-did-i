@@ -52,4 +52,9 @@ export class ElmAppAdapter {
     patchItemDidIt(callback: (uid: string) => void) : void {
         this.app.ports.patchItemDidIt.subscribe(callback)
     }
+    
+    // deleteItem
+    deleteItem(callback: (uid: string) => void) : void {
+        this.app.ports.deleteItem.subscribe(callback)
+    }
 }

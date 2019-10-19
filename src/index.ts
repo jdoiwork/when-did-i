@@ -52,6 +52,11 @@ app.patchItemDidIt(uid => {
   db.patchTaskItemDidIt(uid).then(console.log).catch(e => console.error)
 })
 
+app.deleteItem(uid => {
+  //db.patchTaskItemDidIt(uid).then(console.log).catch(e => console.error)
+  console.log("delete item", uid)
+})
+
 window["app"] = app
 
 import * as firebase from "firebase/app"
