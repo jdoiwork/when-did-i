@@ -1,13 +1,13 @@
 import { IDataBaseService } from './database/types'
 
-import { FireStoreDatabase } from './database/firestore-db'
+import { FireStoreDatabase, isFirebaseUser } from './database/firestore-db'
 import { NullDatabase } from './database/null-db'
 
 export type DatabaseType = "null" | "firestore"
 
-export function createService(type?: DatabaseType) : IDataBaseService {
-  if (type === "firestore") {
-    return new FireStoreDatabase()
+export function createService(user?: any) : IDataBaseService {
+  if (isFirebaseUser(user)) {
+    return new FireStoreDatabase(user)
   } else {
     return new NullDatabase()
   }

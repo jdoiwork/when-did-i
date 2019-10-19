@@ -1,6 +1,7 @@
 
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
+import { Status } from '../helpers/elm-app-adapter'
 
 const providers = {
   google: new firebase.auth.GoogleAuthProvider(),
@@ -38,18 +39,25 @@ async function signIn() : Promise<void> {
 }
 
 type UserCallback = (user: firebase.User | null) => void;
+type AuthCallback = (authInfo: { user: firebase.User | null, status: Status}) => void;
 
-function subscribe(callback: UserCallback) {
+function subscribe(callback: AuthCallback) : void {
     firebase.auth().onAuthStateChanged(function(user) {
+        let status : Status;
         if (user) {
           // User is signed in.
           console.log("user is signed in", user)
+          status = "login"
         }
         else {
           console.log("user is signed out")
+          status = 'logout'
         }
-        
-        callback(user)
+        // const params : { status: Status, db: DatabaseServiceFactory.DatabaseType } =
+        // const status =user ?
+        //  { status: "login", db: 'firestore'} :
+        //  { status: "logout", db: 'null'}
+        callback({ user, status })
     })
 }
 

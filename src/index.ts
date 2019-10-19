@@ -1,7 +1,7 @@
 import './inits/css-init'
 import * as auth from './services/auth'
 
-import { ElmAppAdapter, Status } from './helpers/elm-app-adapter'
+import { ElmAppAdapter } from './helpers/elm-app-adapter'
 
 import {init as firebaseInit } from "./inits/firebase-init"
 
@@ -20,14 +20,10 @@ app.loginWith(provider => {
   auth.signIn()
 })
 
-auth.subscribe((user) => {
-  const params : { status: Status, db: DatabaseServiceFactory.DatabaseType } =
-    user ?
-     { status: "login", db: 'firestore'} :
-     { status: "logout", db: 'null'}
-  db = DatabaseServiceFactory.createService(params.db)
+auth.subscribe(({user, status}) => {
+  db = DatabaseServiceFactory.createService(user)
 
-  app.loginStatusChanged(params.status)
+  app.loginStatusChanged(status)
 })
 
 app.logout(() => {
