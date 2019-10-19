@@ -17,6 +17,7 @@ import Time exposing (..)
 
 import Model.TaskItem exposing (..)
 
+import Helper.Format exposing (..)
 
 type TaskListMsg = DeleteItem Uid
                  | EditItem Uid
@@ -86,7 +87,7 @@ itemCardView item =
         ]
     , div
         [ class "card-content"]
-        [ text "2019/10/16 12:34:56"]
+        [ text <| formatTime utc item.lastUpdated ]
     , footer
         [ class "card-footer"
         , style "justify-content" "center"
