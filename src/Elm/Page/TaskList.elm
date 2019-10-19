@@ -110,7 +110,25 @@ itemCardViewHeader item =
   header
     [class "card-header"]
     [ p [ class "card-header-title" ] [ text item.title]
-    , a [ class "card-header-icon"] [ span [ class "icon"] [ i [class "ion ion-ios-arrow-dropdown"] []]]
+    --, a [ class "card-header-icon"] [ span [ class "icon"] [ i [class "ion ion-ios-arrow-dropdown"] []]]
+    , div
+        [class "dropdown is-active_"]
+        [ div
+            [ class "dropdown-trigger" ]
+            [ div
+                [class ""]
+                [ a [ class "card-header-icon"] [ span [ class "icon"] [ i [class "ion ion-ios-arrow-dropdown"] []]]]
+            ]
+        , div
+            [ class "dropdown-menu" ]
+            [ div
+                [ class "dropdown-content" ]
+                [ a [ class "dropdown-item" ] [ text "aaa"]
+                , a [ class "dropdown-item" ] [ text "bbb"]
+                ]
+            ]
+        ]
+
     ]
 
 itemCardViewContent : TaskItemRe -> Html TaskListMsg
