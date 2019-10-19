@@ -96,33 +96,13 @@ itemCardView : TaskItemRe -> Html TaskListMsg
 itemCardView itemRe =
   let item = itemRe.item in
   div
-    [ class "card", id item.uid ]
+    -- attrs
+    [ class "card"
+    , id item.uid ]
+    -- elements
     [ lazy itemCardViewHeader item
     , lazy itemCardViewContent itemRe
-    , footer
-        [ class "card-footer"
-        , style "justify-content" "center"
-        
-        ]
-        -- [ a [ class "card-footer-item", onClick <| Delete item.uid ] [ text "delete"]
-        -- , p [ class "card-footer-item" ]
-        --     [a [class "button is-fullwidth"] [ text "delete"]]
-        -- , a [ class "card-footer-item", onClick <| Delete item.uid ] [ text "Edit"]
-        -- , a [ class "card-footer-item", onClick <| Delete item.uid ] [ text "Done Again!"]
-        -- ]
-        [ p
-            [ class "card-footer-item", style "padding" "5px 0"]
-            [ div
-                [ class "buttons"]
-                -- [ actionButton "ios-trash" [ class "is-danger"] ""
-                -- , actionButton "ios-create" [ class "is-info"] ""
-                -- , actionButton "ios-checkmark-circle-outline" [ class "is-primary"] "Done"
-                -- ]
-                [ actionButton "ios-checkmark-circle-outline" [ class "is-primary"] "More"
-                ]
-
-            ]
-        ]
+    , itemCardViewFooter
     ]
 
 itemCardViewHeader : TaskItem -> Html TaskListMsg
@@ -139,6 +119,25 @@ itemCardViewContent itemRe =
     [ class "card-content"]
     [ text <| formatTime utc itemRe.item.lastUpdated
     , text itemRe.relative
+    ]
+
+itemCardViewFooter : Html TaskListMsg
+itemCardViewFooter =
+  footer
+    -- footer attrs
+    [ class "card-footer"
+    , style "justify-content" "center"
+    ]
+    -- footer elements
+    [ p
+        -- p attrs
+        [ class "card-footer-item", style "padding" "5px 0"]
+        -- p elements
+        [ div
+            [ class "buttons"]
+            [ actionButton "ios-checkmark-circle-outline" [ class "is-primary"] "More"
+            ]
+        ]
     ]
 
 actionButton : String -> List (Attribute a) -> String -> Html a
