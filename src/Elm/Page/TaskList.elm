@@ -11,6 +11,8 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Html.Keyed as Keyed
 import Html.Lazy exposing (..)
+import Maybe exposing (..)
+import Json.Decode as Json
 
 import Time exposing (..)
 
@@ -55,10 +57,22 @@ updateTaskList msg model =
        } , Cmd.none)
     OpenMenu target ->
       ({ model
-      | items = List.map (\item -> { item | isMenuOpened = target == item }) model.items
-
+      | items = updateItemsOfMenu (Just target) model.items
+      } , Cmd.none)
+    CloseAllMenu -> -- let _ = Debug.log "close all menu" "" in
+      ({ model
+      | items = updateItemsOfMenu (Nothing) model.items
+      -- | items = model.items
       } , Cmd.none)
     _ -> (model, Cmd.none)
+
+updateItemsOfMenu : Maybe TaskItemRe -> List TaskItemRe -> List TaskItemRe
+updateItemsOfMenu target items =
+  let toggle item = target == Just item      -- 別のアイテムならメニューを閉じる
+                    && not item.isMenuOpened -- 同じアイテムだったらメニューの開閉を逆にする
+  in
+  List.map (\item -> { item | isMenuOpened = toggle item }) items
+
 
 updateRelative : Posix -> TaskItemRe -> TaskItemRe
 updateRelative now itemRe =
@@ -115,6 +129,15 @@ itemCardView itemRe =
     , itemCardViewFooter item
     ]
 
+alwaysPreventDefault : msg -> ( msg, Bool )
+alwaysPreventDefault msg =
+  ( msg, True )
+
+onClickPrevent : msg -> Attribute msg
+onClickPrevent msg =
+  stopPropagationOn "click" (Json.map alwaysPreventDefault (Json.succeed msg))
+
+
 itemCardViewHeader : TaskItemRe -> Html TaskListMsg
 itemCardViewHeader itemRe =
   let item = itemRe.item in
@@ -126,9 +149,9 @@ itemCardViewHeader itemRe =
         [ div
             [ class "dropdown-trigger" ]
             [ div
-                [class ""]
+                [ ]
                 [ a [ class "card-header-icon"
-                    , onClick <| OpenMenu itemRe
+                    , onClickPrevent <| OpenMenu itemRe
                     ]
                     [ ionIcon "ios-arrow-dropdown" ]
                 ]

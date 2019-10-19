@@ -133,8 +133,10 @@ update msg model =
       , Cmd.none)
 
     ClickBody ->
-      let (navModel, _) = navUpdate ClickOutSideNav model.topNavState
-      in ({model | topNavState = navModel}, Cmd.none)
+      ( { model
+        | topNavState = navUpdate ClickOutSideNav model.topNavState |> first
+        , taskListState = updateTaskList CloseAllMenu model.taskListState |> first
+        }, Cmd.none)
     Ignore -> (model, Cmd.none)
 
 -- SUBSCRIPTIONS
