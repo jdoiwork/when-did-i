@@ -29,9 +29,10 @@ type TaskListMsg = DeleteItem Uid
                  | OpenMenu TaskItemRe
                  | CloseAllMenu
                  | OpenEditForm TaskItemRe
-                 | CancelEditForm
+                 | CancelEditForm String
                  | ApplyEditForm TaskItem
                  | ChangedEditingItem EditingInput
+                 | Ignore
 
 type EditingInput = TitleInput String
 
@@ -83,7 +84,7 @@ updateTaskList msg model =
       ({ model
       | editingItem = Just { itemRe = itemRe, inputTitle = itemRe.item.title }
       } , Cmd.none)
-    CancelEditForm ->
+    CancelEditForm from -> let _ = Debug.log "cancel edit from" from in
       ({ model
       | editingItem = Nothing
       } , Cmd.none)
@@ -93,6 +94,10 @@ updateTaskList msg model =
           ({ model
           | editingItem = model.editingItem |> Maybe.map (\item -> { item | inputTitle = title })
           }, Cmd.none)
+    ApplyEditForm taskItem ->
+      ({ model
+      | editingItem = Nothing
+      } , Cmd.none)
     _ -> (model, Cmd.none)
 
 updateItemsOfMenu : Maybe TaskItemRe -> List TaskItemRe -> List TaskItemRe
@@ -251,14 +256,20 @@ ionIcon iconName =
     [ i [class "icon", class <| "ion-" ++ iconName]
       []]
 
+createTaskItemFromEditing : EditingModel -> TaskItem
+createTaskItemFromEditing editingModel =
+  let item = editingModel.itemRe.item
+  in { item | title = editingModel.inputTitle }
+
 editView : TaskListModel -> Html TaskListMsg
 editView model =
   case model.editingItem of
-    Nothing -> text "" -- show nothing
+    Nothing -> Html.form [] [] --text "" -- show nothing
     Just editingItem ->
-      Html.form []
+      Html.form [ onSubmit <| ApplyEditForm <| createTaskItemFromEditing editingItem ]
+      --Html.div [ onSubmit Ignore ]
       [ div [ class "modal is-active"]
-        [ div [ class "modal-background", onClick CancelEditForm ] []
+        [ div [ class "modal-background", onClick <| CancelEditForm "modal-background" ] []
         , div [ class "modal-card" ]
             [ editViewHeader editingItem
             , editViewContent editingItem
@@ -273,8 +284,9 @@ editViewHeader model =
     [ p [ class "modal-card-title"] [ text model.itemRe.item.title ]
     , button
         [ class "delete"
+        , type_ "button"
         , attribute "aria-label" "close"
-        , onClick CancelEditForm
+        , onClick <| CancelEditForm "X button"
         ]
         []
     ]
@@ -297,10 +309,10 @@ editViewContent model =
 editViewFooter : Html TaskListMsg
 editViewFooter =
   footer [ class "modal-card-foot"]
-    [ button [ class "button is-primary"] [ text "Save changes" ]
+    [ button [ class "button is-primary", type_ "submit"] [ text "Save changes" ]
     , button
       [ class "button"
-      , onClick CancelEditForm
+      , onClick <| CancelEditForm "cancel button"
       ]
       [ text "Cancel" ]
     ]
