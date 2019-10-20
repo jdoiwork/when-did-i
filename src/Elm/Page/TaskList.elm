@@ -331,15 +331,15 @@ validateInputTitle model =
 editViewFooter : EditingModel -> Html TaskListMsg
 editViewFooter model =
   footer [ class "modal-card-foot"]
-    [ button 
+    [ button
+      [ class "button"
+      , onClick <| CancelEditForm "cancel button"
+      ]
+      [ text "Cancel" ]
+    , button 
       [ class "button is-primary"
       , type_ "submit"
       , disabled <| validateInputTitle model
       ]
       [ text "Save changes" ]
-    , button
-      [ class "button"
-      , onClick <| CancelEditForm "cancel button"
-      ]
-      [ text "Cancel" ]
     ]
