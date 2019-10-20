@@ -45,8 +45,8 @@ app.patchItemDidIt(uid => {
 })
 
 app.patchItem(taskItem => {
-  //db.patchTaskItemDidIt(uid).then(console.log).catch(e => console.error)
-  console.log(taskItem)
+  db.patchTaskItem(taskItem).then(console.log).catch(e => console.error)
+  // console.log(taskItem)
 })
 
 app.deleteItem(uid => {

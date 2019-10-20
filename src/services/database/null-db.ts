@@ -12,6 +12,10 @@ export class NullDatabase implements IDataBaseService {
     return { data: "null database"}
   }
 
+  async patchTaskItem(taskItem: TaskItem): Promise<any> {
+    return { data: "null database"}
+  }
+
   async deleteItem(taskUid: string): Promise<any> {
     return { data: "null database"}
   }
