@@ -66,6 +66,7 @@ type Msg
   | RequestByList TaskListMsg
   | ClickBody
   | Tick Posix
+  | NotifyTaskItemIsUpdated Uid
   | Ignore
 
 
@@ -150,6 +151,10 @@ update msg model =
         | topNavState = navUpdate ClickOutSideNav model.topNavState |> first
         , taskListState = updateTaskList CloseAllMenu model.taskListState |> first
         }, Cmd.none)
+    NotifyTaskItemIsUpdated uid ->
+      ( { model
+        | taskListState = updateTaskList (TaskItemIsUpdated uid) model.taskListState |> first
+        }, Cmd.none)
     Ignore -> (model, Cmd.none)
 
 -- SUBSCRIPTIONS
@@ -165,12 +170,14 @@ port deleteItem : String -> Cmd msg
 
 port createdNewItem : (D.Value -> msg) -> Sub msg
 port updatedItems : (D.Value -> msg) -> Sub msg
+port notifyTaskItemIsUpdated : (String -> msg) -> Sub msg
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.batch
     [ loginStatusChanged LoginStatusChanged
     , updatedItems convertUpdatedItems
+    , notifyTaskItemIsUpdated NotifyTaskItemIsUpdated
     , everyNSec 3
     ]
 

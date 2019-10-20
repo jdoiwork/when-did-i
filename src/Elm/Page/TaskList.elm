@@ -32,6 +32,7 @@ type TaskListMsg = DeleteItem Uid
                  | CancelEditForm String
                  | ApplyEditForm TaskItem
                  | ChangedEditingItem EditingInput
+                 | TaskItemIsUpdated Uid
                  | Ignore
 
 type EditingInput = TitleInput String
