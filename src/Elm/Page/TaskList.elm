@@ -333,6 +333,7 @@ editViewFooter model =
   footer [ class "modal-card-foot"]
     [ button
       [ class "button"
+      , type_ "button"
       , onClick <| CancelEditForm "cancel button"
       ]
       [ text "Cancel" ]
