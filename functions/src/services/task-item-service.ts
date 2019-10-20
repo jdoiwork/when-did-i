@@ -2,6 +2,7 @@ import * as admin from 'firebase-admin'
 
 import { AuthInfo } from '../helpers/authorize'
 import { HttpsError } from 'firebase-functions/lib/providers/https'
+import { TaskItem } from '../../../src/models/task-item'
 
 require('../helpers/firebase-init').init()
 
@@ -61,6 +62,33 @@ export async function updateDidIt(taskUid : string, auth: AuthInfo) {
   } catch (e) {
     console.error("Exception:!!!! updateDidIt", { error:e, taskUid, auth})
     throw new HttpsError('unknown', e.message, { taskUid, auth })
+  }
+  
+}
+
+export async function updateTaskItem(item : TaskItem, auth: AuthInfo) {
+  try {
+    console.log("updateDidIt::args:", {item, auth})
+    const tasks = tasksRef(auth)
+    const uid = item.uid
+    const task = tasks.doc(item.uid)
+
+    // TODO: uidとtitleとlastUpdatedのチェック
+
+
+    // const updateItem = {
+    //   lastUpdated: Date.now(),
+    // }
+    // console.log("updateDidIt::update updateItem", updateItem)
+
+    await task.update(item)
+    
+    console.log(`updateDidIt::set completed: ${uid}`)
+    return item
+
+  } catch (e) {
+    console.error("Exception:!!!! updateDidIt", { error:e, item, auth})
+    throw new HttpsError('unknown', e.message, { item, auth })
   }
   
 }
