@@ -272,7 +272,7 @@ editView model =
         , div [ class "modal-card" ]
             [ editViewHeader editingItem
             , editViewContent editingItem
-            , editViewFooter
+            , editViewFooter editingItem
             ]
         ]
       ]
@@ -305,10 +305,20 @@ editViewContent model =
         ]
     ]
 
-editViewFooter : Html TaskListMsg
-editViewFooter =
+validateInputTitle : EditingModel -> Bool
+validateInputTitle model =
+  model.inputTitle == model.itemRe.item.title -- 元の入力値と同じ
+    || model.inputTitle == "" -- 入力値が空文字列
+
+editViewFooter : EditingModel -> Html TaskListMsg
+editViewFooter model =
   footer [ class "modal-card-foot"]
-    [ button [ class "button is-primary", type_ "submit"] [ text "Save changes" ]
+    [ button 
+      [ class "button is-primary"
+      , type_ "submit"
+      , disabled <| validateInputTitle model
+      ]
+      [ text "Save changes" ]
     , button
       [ class "button"
       , onClick <| CancelEditForm "cancel button"
