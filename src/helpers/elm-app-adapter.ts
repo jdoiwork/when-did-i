@@ -48,6 +48,11 @@ export class ElmAppAdapter {
         this.app.ports.updatedItems.send(newItems)
     }
 
+    // notifyTaskItemIsUpdated
+    notifyTaskItemIsUpdated(uid: String) : void {
+        this.app.ports.notifyTaskItemIsUpdated.send(uid)
+    }
+
     // patchItemDidIt
     patchItemDidIt(callback: (uid: string) => void) : void {
         this.app.ports.patchItemDidIt.subscribe(callback)

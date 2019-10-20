@@ -105,14 +105,23 @@ updateTaskList msg model =
       ({ model
       | items = markUpdating uid model.items
       } , Cmd.none)
-
+    TaskItemIsUpdated uid -> --let _ = Debug.log "TaskItemIsUpdated" uid in
+      ({ model
+      | items = unmarkUpdating uid model.items
+      } , Cmd.none)
     _ -> (model, Cmd.none)
 
 markUpdating : Uid -> List TaskItemRe -> List TaskItemRe
-markUpdating uid items =
+markUpdating = markUpdatingCore True
+
+unmarkUpdating : Uid -> List TaskItemRe -> List TaskItemRe
+unmarkUpdating = markUpdatingCore False
+
+markUpdatingCore : Bool -> Uid -> List TaskItemRe -> List TaskItemRe
+markUpdatingCore isUpdating uid items =
   let f itemRe =
         if itemRe.item.uid == uid
-          then { itemRe | isUpdating = True }
+          then { itemRe | isUpdating = isUpdating }
           else itemRe
   in List.map f items
 

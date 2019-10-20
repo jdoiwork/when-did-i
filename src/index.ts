@@ -41,13 +41,23 @@ app.postNewItem(async title => {
 })
 
 app.patchItemDidIt(uid => {
-  db.patchTaskItemDidIt(uid).then(console.log).catch(e => console.error)
+  afterPatched('patchItemDidIt', uid, db.patchTaskItemDidIt(uid))
 })
 
 app.patchItem(taskItem => {
-  db.patchTaskItem(taskItem).then(console.log).catch(e => console.error)
-  // console.log(taskItem)
+  afterPatched('patchItem', taskItem.uid, db.patchTaskItem(taskItem))
 })
+
+async function afterPatched(key: String, uid: String, promise: Promise<any>) {
+  try {
+    const result = await promise
+    console.log(key, uid, result)
+  } catch (e) {
+    console.error(key, uid, e.message)
+  }
+
+  app.notifyTaskItemIsUpdated(uid)
+}
 
 app.deleteItem(uid => {
   db.deleteItem(uid).then(console.log).catch(console.error)
