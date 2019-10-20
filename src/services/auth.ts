@@ -5,6 +5,8 @@ import { Status } from '../helpers/elm-app-adapter'
 
 const providers = {
   google: new firebase.auth.GoogleAuthProvider(),
+  facebook: new firebase.auth.FacebookAuthProvider(),
+  twitter: new firebase.auth.TwitterAuthProvider(),
   github: new firebase.auth.GithubAuthProvider(),
 }
 

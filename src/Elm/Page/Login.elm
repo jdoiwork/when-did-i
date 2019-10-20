@@ -24,9 +24,9 @@ login =
           [ class "columns"]
           [ button [ buttonClass, onClick <| LoginWith Google] <|
               iconWithText "logo-google" "Google"
-          , button [ buttonClass, disabled True] <|
+          , button [ buttonClass, onClick <| LoginWith Facebook] <|
               iconWithText "logo-facebook" "Facebook"
-          , button [ buttonClass, disabled True] <|
+          , button [ buttonClass, onClick <| LoginWith Twitter] <|
               iconWithText "logo-twitter" "Twitter"
           , button [ buttonClass, onClick <| LoginWith Github] <|
               iconWithText "logo-github" "Github"
