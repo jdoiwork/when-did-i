@@ -153,6 +153,7 @@ update msg model =
     Ignore -> (model, Cmd.none)
 
 -- SUBSCRIPTIONS
+-- ports
 
 port loginStatusChanged : (String -> msg) -> Sub msg
 port loginWith : E.Value -> Cmd msg
