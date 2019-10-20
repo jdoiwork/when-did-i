@@ -28,11 +28,15 @@ type TaskListMsg = DeleteItem Uid
                  | UpdatedNow Posix
                  | OpenMenu TaskItemRe
                  | CloseAllMenu
+                 | OpenEditForm TaskItemRe
+                 | CancelEditForm
+                 | ApplyEditForm TaskItem
 
 
 type alias TaskListModel =
   { items : List TaskItemRe
   , now : Posix
+  , editingItem : Maybe TaskItemRe
   }
 
 type alias TaskItemRe =
@@ -42,7 +46,11 @@ type alias TaskItemRe =
   }
 
 taskListInit : TaskListModel
-taskListInit = { items = [], now = millisToPosix 0 }
+taskListInit =
+  { items = []
+  , now = millisToPosix 0
+  , editingItem = Nothing
+  }
 
 updateTaskList : TaskListMsg -> TaskListModel -> ( TaskListModel, Cmd TaskListMsg )
 updateTaskList msg model =
