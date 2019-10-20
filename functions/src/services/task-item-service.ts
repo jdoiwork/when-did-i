@@ -73,15 +73,25 @@ export async function updateTaskItem(item : TaskItem, auth: AuthInfo) {
     const uid = item.uid
     const task = tasks.doc(item.uid)
 
-    // TODO: uidとtitleとlastUpdatedのチェック
+    // validations
+    const safeTitle = String(item.title || "")
 
+    if (!safeTitle) {
+      throw new Error("TaskItem.title is empty.")
+    } else if (!Number.isSafeInteger(item.lastUpdated)) {
+      throw new Error(`TaskItem.lastUpdated is NOT valid POSIX TIME(${item.lastUpdated}).`)
+    }
 
-    // const updateItem = {
-    //   lastUpdated: Date.now(),
-    // }
+    // const snap = await task.get()
+    //snap.exists
+    const updateItem = {
+      uid: item.uid,
+      title: safeTitle,
+      lastUpdated: item.lastUpdated,
+    }
     // console.log("updateDidIt::update updateItem", updateItem)
 
-    await task.update(item)
+    await task.update(updateItem)
     
     console.log(`updateDidIt::set completed: ${uid}`)
     return item
