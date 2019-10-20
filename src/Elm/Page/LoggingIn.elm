@@ -8,9 +8,16 @@ import Html.Events exposing (..)
 
 viewLoggingIn : Html a
 viewLoggingIn =
-  main_ []
-    [ h1 [] [ text "Logging in..." ]
-    , p [] [ text "Waiting for authentication result." ]
+  main_ [ class "hero is-info is-bold"]
+    [ div [class "hero-body"]
+      [ div [ class "container"] 
+          viewContainer]]
+
+viewContainer : List (Html a)
+viewContainer =
+    [ h1 [ class "title"] [ text "Logging in..." ]
+    , p [ class "subtitle"] [ text "Waiting for authentication result." ]
     , p []
-        [ a [ class "button is-primary"] [ text "Retry" ] ]
+        [ a [ class "button is-primary", href "/login"]
+            [ text "Retry 😘" ] ]
     ]

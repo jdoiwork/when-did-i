@@ -202,7 +202,10 @@ showLogin model =
   ]
 
 showLoggingIn : Model -> List (Html Msg)
-showLoggingIn model = [viewLoggingIn]
+showLoggingIn model = 
+  [ mapNavView model topNavViewWithoutFixed
+  , viewLoggingIn
+  ]
 
 showIndex : Model -> List (Html Msg)
 showIndex model =
