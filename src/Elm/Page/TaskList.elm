@@ -208,7 +208,9 @@ itemCardViewHeader itemRe =
     [class "card-header"]
     [ p [ class "card-header-title" ] [ text item.title ]
     , div
-        [class "dropdown is-right", classList [("is-active", itemRe.isMenuOpened)]]
+        [ class "dropdown is-right"
+        , classList [("is-active", itemRe.isMenuOpened), ("is-hidden", itemRe.isUpdating)]
+        ]
         [ div
             [ class "dropdown-trigger" ]
             [ div
