@@ -2,6 +2,7 @@ module Page.TaskList exposing
   ( listView
   , TaskListModel
   , taskListInit
+  , taskListInitWithOutTime
   , TaskListMsg(..)
   , updateTaskList
   )
@@ -26,6 +27,7 @@ type TaskListMsg = DeleteItem Uid
                  | CreateItem TaskItem
                  | UpdatedItems (List ChangeEvent)
                  | UpdatedNow Posix
+                 | UpdatedZone Zone
                  | OpenMenu TaskItemRe
                  | CloseAllMenu
                  | OpenEditForm TaskItemRe
@@ -40,6 +42,7 @@ type EditingInput = TitleInput String
 type alias TaskListModel =
   { items : List TaskItemRe
   , now : Posix
+  , zone : Zone
   , editingItem : Maybe EditingModel
   }
 
@@ -59,7 +62,15 @@ taskListInit : TaskListModel
 taskListInit =
   { items = []
   , now = millisToPosix 0
+  , zone = utc
   , editingItem = Nothing
+  }
+
+taskListInitWithOutTime : TaskListModel -> TaskListModel
+taskListInitWithOutTime model =
+  { model
+  | now = model.now
+  , zone = model.zone
   }
 
 updateTaskList : TaskListMsg -> TaskListModel -> ( TaskListModel, Cmd TaskListMsg )
@@ -71,7 +82,11 @@ updateTaskList msg model =
     UpdatedNow now ->
       ({ model
        | now = now
-       , items = List.map (updateRelative model.now) model.items
+       , items = List.map (updateRelative now) model.items
+       } , Cmd.none)
+    UpdatedZone zone ->
+      ({ model
+       | zone = zone
        } , Cmd.none)
     OpenMenu target ->
       ({ model
@@ -157,30 +172,30 @@ mergeItems now ces ts =
       DeletedItem item -> List.filter (\t -> t.item.uid /= item.uid) ts
 
 listView : TaskListModel -> Html TaskListMsg
-listView model =
+listView model = --let _ = Debug.log "listView zone:" model.zone in
   section [class "section"]
-    [ gridListView model.items
+    [ gridListView model.zone model.items
     , editView model
     ]
 
-gridListView : List TaskItemRe -> Html TaskListMsg
-gridListView xs =
+gridListView : Zone -> List TaskItemRe -> Html TaskListMsg
+gridListView zone xs =
   div [ class "container"]
     [ Keyed.node "div" [ class "columns is-multiline" ] <|
-      List.map (\x -> (x.item.uid, lazy columnView x)) xs
+      List.map (\x -> (x.item.uid, lazy2 columnView zone x)) xs
     ]
   
 
-columnView : TaskItemRe -> Html TaskListMsg
-columnView item =
-  div [ class "column is-4"] [itemView item]
+columnView : Zone -> TaskItemRe -> Html TaskListMsg
+columnView zone item =
+  div [ class "column is-4"] [itemView zone item]
 
-itemView : TaskItemRe -> Html TaskListMsg
-itemView item =
-  div [class ""] [itemCardView item]
+itemView : Zone -> TaskItemRe -> Html TaskListMsg
+itemView zone item =
+  div [class ""] [itemCardView zone item]
 
-itemCardView : TaskItemRe -> Html TaskListMsg
-itemCardView itemRe =
+itemCardView : Zone -> TaskItemRe -> Html TaskListMsg
+itemCardView zone itemRe =
   let item = itemRe.item in
   div
     -- attrs
@@ -188,7 +203,7 @@ itemCardView itemRe =
     , id item.uid ]
     -- elements
     [ lazy itemCardViewHeader itemRe
-    , lazy itemCardViewContent itemRe
+    , lazy2 itemCardViewContent zone itemRe
     , itemCardViewFooter itemRe
     ]
 
@@ -239,12 +254,12 @@ itemCardViewHeader itemRe =
 
     ]
 
-itemCardViewContent : TaskItemRe -> Html TaskListMsg
-itemCardViewContent itemRe =
+itemCardViewContent : Zone -> TaskItemRe -> Html TaskListMsg
+itemCardViewContent zone itemRe =
   div
     [ class "card-content"]
     [ p [ class "title" ] [text itemRe.relative]
-    , p [ class "subtitle"] [text <| formatTime utc itemRe.item.lastUpdated]
+    , p [ class "subtitle"] [text <| formatTime zone itemRe.item.lastUpdated]
     ]
 
 itemCardViewFooter : TaskItemRe -> Html TaskListMsg

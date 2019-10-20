@@ -9,7 +9,7 @@ import Html.Lazy exposing (..)
 import Json.Encode as E
 import Json.Decode as D
 import Url
-import Time exposing (Posix)
+import Time exposing (Posix, Zone)
 import Task
 import Tuple exposing (first)
 
@@ -54,7 +54,12 @@ type LoginStatus = Checking
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
-  ( Model key url Checking navInit taskListInit, Task.perform Tick Time.now )
+  ( Model key url Checking navInit taskListInit
+  , Cmd.batch
+    [ Task.perform Tick Time.now
+    , Task.perform ZoneChanged Time.here
+    ]
+  )
 
 type Msg
   = LinkClicked Browser.UrlRequest
@@ -66,6 +71,7 @@ type Msg
   | RequestByList TaskListMsg
   | ClickBody
   | Tick Posix
+  | ZoneChanged Zone
   | NotifyTaskItemIsUpdated Uid
   | Ignore
 
@@ -99,7 +105,7 @@ update msg model =
       in ({ model
           | login = login
           , topNavState = navInit
-          , taskListState = {taskListInit | now = model.taskListState.now}
+          , taskListState = taskListInitWithOutTime model.taskListState
           }, cmd )
 
     RequestLogin provider ->
@@ -145,7 +151,11 @@ update msg model =
         | taskListState = updateTaskList (UpdatedNow now) model.taskListState |> first
         }
       , Cmd.none)
-
+    ZoneChanged zone -> let _ = Debug.log "ZoneChanged" zone in
+      ( { model
+        | taskListState = updateTaskList (UpdatedZone zone) model.taskListState |> first
+        }
+      , Cmd.none)
     ClickBody ->
       ( { model
         | topNavState = navUpdate ClickOutSideNav model.topNavState |> first
