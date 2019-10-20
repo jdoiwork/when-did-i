@@ -98,7 +98,10 @@ mergeItems now ces ts =
 
 listView : TaskListModel -> Html TaskListMsg
 listView model =
-  section [class "section"] <| [gridListView model.items]
+  section [class "section"]
+    [ gridListView model.items
+    , editView
+    ]
 
 gridListView : List TaskItemRe -> Html TaskListMsg
 gridListView xs =
@@ -215,3 +218,33 @@ ionIcon iconName =
   span [ class "icon" ]
     [ i [class "icon", class <| "ion-" ++ iconName]
       []]
+
+editView : Html a
+editView =
+  div [ class "modal is-active-"]
+    [ div [ class "modal-background" ] []
+    , div [ class "modal-card" ]
+        [ editViewHeader
+        , editViewContent
+        , editViewFooter
+        ]
+    ]
+
+editViewHeader : Html a
+editViewHeader =
+  header [ class "modal-card-head"]
+    [ p [ class "modal-card-title"] [ text "Modal Title"]
+    , button [ class "delete", attribute "aria-label" "close" ] []
+    ]
+
+editViewContent : Html a
+editViewContent =
+  section [ class "modal-card-body"]
+    [ text "card body" ]
+
+editViewFooter : Html a
+editViewFooter =
+  footer [ class "modal-card-foot"]
+    [ button [ class "button is-success"] [ text "Save changes" ]
+    , button [ class "button"] [ text "Cancel" ]
+    ]
