@@ -84,7 +84,7 @@ updateTaskList msg model =
       ({ model
       | editingItem = Just { itemRe = itemRe, inputTitle = itemRe.item.title }
       } , Cmd.none)
-    CancelEditForm from -> let _ = Debug.log "cancel edit from" from in
+    CancelEditForm from -> -- let _ = Debug.log "cancel edit from" from in
       ({ model
       | editingItem = Nothing
       } , Cmd.none)
