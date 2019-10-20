@@ -2,7 +2,7 @@ import * as admin from 'firebase-admin'
 
 import { AuthInfo } from '../helpers/authorize'
 import { HttpsError } from 'firebase-functions/lib/providers/https'
-import { TaskItem } from '../../../src/models/task-item'
+import { TaskItem } from '../models/task-item'
 
 require('../helpers/firebase-init').init()
 

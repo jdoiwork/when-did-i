@@ -12,6 +12,7 @@
     "build": "yarn clean-pub && parcel build src/index.html src/robots.txt -d public --no-source-maps",
     "clean": "rm -rf dist .cache elm-stuff public .firebase",
     "clean-pub": "rm -f public/*.{js,css,map}",
+    "clean-func": "rm -rf functions/lib",
     "type-check": "yarn tsc src/index.ts -w --noEmit --target ES5 --experimentalDecorators",
     "deploy": "firebase deploy --only hosting",
     "test": "jest",
@@ -19,7 +20,7 @@
     "deploy-func": "firebase deploy --only functions",
     "deploy-func1": "firebase deploy --only functions:createTaskItem",
     "deploy-func2": "firebase deploy --only functions:updateTaskItemDidIt",
-    "deploy-func3": "firebase deploy --only functions:updateTask"
+    "deploy-func3": "firebase deploy --only functions:updateTaskItem"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
