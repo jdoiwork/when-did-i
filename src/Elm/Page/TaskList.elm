@@ -98,6 +98,7 @@ updateTaskList msg model =
     ApplyEditForm taskItem -> --let _ = Debug.log "ApplyEditForm" 0 in
       ({ model
       | editingItem = Nothing
+      , items = markUpdating taskItem.uid model.items
       } , Cmd.none)
     DidItItem uid ->
       ({ model
