@@ -36,7 +36,12 @@ type TaskListMsg = DeleteItem Uid
 type alias TaskListModel =
   { items : List TaskItemRe
   , now : Posix
-  , editingItem : Maybe TaskItemRe
+  , editingItem : Maybe EditingModel
+  }
+
+type alias EditingModel =
+  { itemRe : TaskItemRe
+  , inputTitle : String
   }
 
 type alias TaskItemRe =
@@ -74,7 +79,7 @@ updateTaskList msg model =
       } , Cmd.none)
     OpenEditForm itemRe ->
       ({ model
-      | editingItem = Just itemRe
+      | editingItem = Just { itemRe = itemRe, inputTitle = "" }
       } , Cmd.none)
     CancelEditForm ->
       ({ model
@@ -240,19 +245,22 @@ ionIcon iconName =
 
 editView : TaskListModel -> Html TaskListMsg
 editView model =
-  div [ class "modal", classList [("is-active", model.editingItem /= Nothing )]]
-    [ div [ class "modal-background" ] []
-    , div [ class "modal-card" ]
-        [ editViewHeader
-        , editViewContent
-        , editViewFooter
+  case model.editingItem of
+    Nothing -> text "" -- show nothing
+    Just editingItem ->
+      div [ class "modal is-active"]
+        [ div [ class "modal-background", onClick CancelEditForm ] []
+        , div [ class "modal-card" ]
+            [ editViewHeader editingItem
+            , editViewContent
+            , editViewFooter
+            ]
         ]
-    ]
 
-editViewHeader : Html TaskListMsg
-editViewHeader =
+editViewHeader : EditingModel -> Html TaskListMsg
+editViewHeader model =
   header [ class "modal-card-head"]
-    [ p [ class "modal-card-title"] [ text "Modal Title"]
+    [ p [ class "modal-card-title"] [ text model.itemRe.item.title ]
     , button
         [ class "delete"
         , attribute "aria-label" "close"
@@ -269,7 +277,7 @@ editViewContent =
 editViewFooter : Html TaskListMsg
 editViewFooter =
   footer [ class "modal-card-foot"]
-    [ button [ class "button is-success"] [ text "Save changes" ]
+    [ button [ class "button is-primary"] [ text "Save changes" ]
     , button
       [ class "button"
       , onClick CancelEditForm
