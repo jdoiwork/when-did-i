@@ -51,6 +51,7 @@ type alias TaskItemRe =
   { item : TaskItem
   , relative : String
   , isMenuOpened: Bool
+  , isUpdating: Bool
   }
 
 taskListInit : TaskListModel
@@ -98,7 +99,20 @@ updateTaskList msg model =
       ({ model
       | editingItem = Nothing
       } , Cmd.none)
+    DidItItem uid ->
+      ({ model
+      | items = markUpdating uid model.items
+      } , Cmd.none)
+
     _ -> (model, Cmd.none)
+
+markUpdating : Uid -> List TaskItemRe -> List TaskItemRe
+markUpdating uid items =
+  let f itemRe =
+        if itemRe.item.uid == uid
+          then { itemRe | isUpdating = True }
+          else itemRe
+  in List.map f items
 
 updateItemsOfMenu : Maybe TaskItemRe -> List TaskItemRe -> List TaskItemRe
 updateItemsOfMenu target items =
@@ -119,6 +133,7 @@ mkTaskItemRe : Posix -> TaskItem -> TaskItemRe
 mkTaskItemRe now item = { item = item
                         , relative = formatTimeRe now item.lastUpdated
                         , isMenuOpened = False
+                        , isUpdating = False
                         }
 
 mergeItems : Posix -> List ChangeEvent -> List TaskItemRe -> List TaskItemRe
@@ -163,7 +178,7 @@ itemCardView itemRe =
     -- elements
     [ lazy itemCardViewHeader itemRe
     , lazy itemCardViewContent itemRe
-    , itemCardViewFooter item
+    , itemCardViewFooter itemRe
     ]
 
 alwaysPreventDefault : msg -> ( msg, Bool )
@@ -219,8 +234,9 @@ itemCardViewContent itemRe =
     , p [ class "subtitle"] [text <| formatTime utc itemRe.item.lastUpdated]
     ]
 
-itemCardViewFooter : TaskItem -> Html TaskListMsg
-itemCardViewFooter item =
+itemCardViewFooter : TaskItemRe -> Html TaskListMsg
+itemCardViewFooter itemRe =
+  let item = itemRe.item in
   footer
     -- footer attrs
     [ class "card-footer"
@@ -235,6 +251,7 @@ itemCardViewFooter item =
             [ class "buttons"]
             [ actionButton "ios-checkmark-circle-outline"
                 [ class "is-primary"
+                , classList [("is-loading", itemRe.isUpdating)]
                 , onClick <| DidItItem item.uid
                 ]
                 "More"
