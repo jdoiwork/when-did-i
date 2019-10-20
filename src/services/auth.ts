@@ -5,6 +5,7 @@ import { Status } from '../helpers/elm-app-adapter'
 
 const providers = {
   google: new firebase.auth.GoogleAuthProvider(),
+  github: new firebase.auth.GithubAuthProvider(),
 }
 
 
@@ -20,10 +21,10 @@ function logError(error) {
     console.error("error", error)
 }
 
-async function signIn() : Promise<void> {
+async function signIn(provider: string) : Promise<void> {
     try {
         // const result = await firebase.auth().signInWithPopup(providers.google)
-        const result = await firebase.auth().signInWithRedirect(providers.google)
+        const result = await firebase.auth().signInWithRedirect(providers[provider])
         // This gives you a Google Access Token. You can use it to access the Google API.
         // let token = result.credential.accessToken;
         // // The signed-in user info.

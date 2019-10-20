@@ -101,7 +101,7 @@ update msg model =
           }, cmd )
 
     RequestLogin provider ->
-      ( model, loginWith <| E.string "google")
+      ( model, loginWith <| E.string <| Page.Login.stringFromProvider provider)
       
     RequestTopNavMsg navMsg ->
       case navMsg of

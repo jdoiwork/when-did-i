@@ -1,4 +1,4 @@
-module Page.Login exposing (login, AuthProvider, Msg(..))
+module Page.Login exposing (login, AuthProvider, Msg(..), stringFromProvider)
 
 
 import Html exposing (..)
@@ -28,7 +28,7 @@ login =
               iconWithText "logo-facebook" "Facebook"
           , button [ buttonClass, disabled True] <|
               iconWithText "logo-twitter" "Twitter"
-          , button [ buttonClass, disabled True] <|
+          , button [ buttonClass, onClick <| LoginWith Github] <|
               iconWithText "logo-github" "Github"
 
           -- <i class="material-icons">face</i>
@@ -51,3 +51,11 @@ ionIcon ionName = span [ class "icon"] [i [ class <| "ion-" ++ ionName] []]
 
   
 buttonClass = class "button is-large is-fullwidth"
+
+stringFromProvider : AuthProvider -> String
+stringFromProvider provider =
+  case provider of
+    Google -> "google"
+    Facebook -> "facebook"
+    Twitter -> "twitter"
+    Github -> "github"

@@ -12,7 +12,7 @@ interface Flags {
     // initialValue: string;
 }
 
-export type Provider = "google" //| "twitter"
+export type Provider = "google" | "facebook" | "twitter" | "github"
 
 export type Status = "login" | "logout" | "checking"
 

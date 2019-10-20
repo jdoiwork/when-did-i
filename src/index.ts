@@ -17,7 +17,7 @@ let db = DatabaseServiceFactory.createService()
 
 app.loginWith(provider => {
   console.log(`${provider} login`)
-  auth.signIn()
+  auth.signIn(provider)
 })
 
 auth.subscribe(async ({user, status}) => {
