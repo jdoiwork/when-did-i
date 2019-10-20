@@ -18,6 +18,6 @@ viewContainer =
     [ h1 [ class "title"] [ text "Logging in..." ]
     , p [ class "subtitle"] [ text "Waiting for authentication result." ]
     , p []
-        [ a [ class "button is-primary", href "/login"]
+        [ a [ class "button is-primary is-large", href "/login"]
             [ text "Retry 😘" ] ]
     ]
