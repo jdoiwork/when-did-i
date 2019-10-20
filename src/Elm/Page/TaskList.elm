@@ -31,7 +31,9 @@ type TaskListMsg = DeleteItem Uid
                  | OpenEditForm TaskItemRe
                  | CancelEditForm
                  | ApplyEditForm TaskItem
+                 | ChangedEditingItem EditingInput
 
+type EditingInput = TitleInput String
 
 type alias TaskListModel =
   { items : List TaskItemRe
@@ -79,12 +81,18 @@ updateTaskList msg model =
       } , Cmd.none)
     OpenEditForm itemRe ->
       ({ model
-      | editingItem = Just { itemRe = itemRe, inputTitle = "" }
+      | editingItem = Just { itemRe = itemRe, inputTitle = itemRe.item.title }
       } , Cmd.none)
     CancelEditForm ->
       ({ model
       | editingItem = Nothing
       } , Cmd.none)
+    ChangedEditingItem editingInput ->
+      case editingInput of
+        TitleInput title ->
+          ({ model
+          | editingItem = model.editingItem |> Maybe.map (\item -> { item | inputTitle = title })
+          }, Cmd.none)
     _ -> (model, Cmd.none)
 
 updateItemsOfMenu : Maybe TaskItemRe -> List TaskItemRe -> List TaskItemRe
@@ -248,14 +256,16 @@ editView model =
   case model.editingItem of
     Nothing -> text "" -- show nothing
     Just editingItem ->
-      div [ class "modal is-active"]
+      Html.form []
+      [ div [ class "modal is-active"]
         [ div [ class "modal-background", onClick CancelEditForm ] []
         , div [ class "modal-card" ]
             [ editViewHeader editingItem
-            , editViewContent
+            , editViewContent editingItem
             , editViewFooter
             ]
         ]
+      ]
 
 editViewHeader : EditingModel -> Html TaskListMsg
 editViewHeader model =
@@ -269,10 +279,20 @@ editViewHeader model =
         []
     ]
 
-editViewContent : Html TaskListMsg
-editViewContent =
+editViewContent : EditingModel -> Html TaskListMsg
+editViewContent model =
   section [ class "modal-card-body"]
-    [ text "card body" ]
+    [ div [ class "field"]
+        [ label [ class "label"] [ text "Title" ]
+        , div [ class "control"]
+            [ input [ class "input"
+                    , type_ "text"
+                    , onInput <| TitleInput >> ChangedEditingItem
+                    , value model.inputTitle
+                    ] []
+            ]
+        ]
+    ]
 
 editViewFooter : Html TaskListMsg
 editViewFooter =
