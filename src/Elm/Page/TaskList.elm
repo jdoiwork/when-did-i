@@ -72,6 +72,14 @@ updateTaskList msg model =
       | items = updateItemsOfMenu (Nothing) model.items
       -- | items = model.items
       } , Cmd.none)
+    OpenEditForm itemRe ->
+      ({ model
+      | editingItem = Just itemRe
+      } , Cmd.none)
+    CancelEditForm ->
+      ({ model
+      | editingItem = Nothing
+      } , Cmd.none)
     _ -> (model, Cmd.none)
 
 updateItemsOfMenu : Maybe TaskItemRe -> List TaskItemRe -> List TaskItemRe
@@ -108,7 +116,7 @@ listView : TaskListModel -> Html TaskListMsg
 listView model =
   section [class "section"]
     [ gridListView model.items
-    , editView
+    , editView model
     ]
 
 gridListView : List TaskItemRe -> Html TaskListMsg
@@ -171,8 +179,11 @@ itemCardViewHeader itemRe =
             [ class "dropdown-menu" ]
             [ div
                 [ class "dropdown-content" ]
-                [ a [ class "dropdown-item", attribute "disabled" ""] [ ionIcon "ios-create", text "Edit" ]
-                , a [ class "dropdown-item has-text-danger"
+                [ a [ class "dropdown-item" -- 編集メニュー
+                    , onClick <| OpenEditForm itemRe
+                    ]
+                    [ ionIcon "ios-create", text "Edit" ]
+                , a [ class "dropdown-item has-text-danger" -- 削除メニュ
                     , onClick <| DeleteItem item.uid
                     ]
                     [ ionIcon "ios-trash", text "Delete" ]
@@ -227,9 +238,9 @@ ionIcon iconName =
     [ i [class "icon", class <| "ion-" ++ iconName]
       []]
 
-editView : Html a
-editView =
-  div [ class "modal is-active-"]
+editView : TaskListModel -> Html TaskListMsg
+editView model =
+  div [ class "modal", classList [("is-active", model.editingItem /= Nothing )]]
     [ div [ class "modal-background" ] []
     , div [ class "modal-card" ]
         [ editViewHeader
@@ -238,21 +249,30 @@ editView =
         ]
     ]
 
-editViewHeader : Html a
+editViewHeader : Html TaskListMsg
 editViewHeader =
   header [ class "modal-card-head"]
     [ p [ class "modal-card-title"] [ text "Modal Title"]
-    , button [ class "delete", attribute "aria-label" "close" ] []
+    , button
+        [ class "delete"
+        , attribute "aria-label" "close"
+        , onClick CancelEditForm
+        ]
+        []
     ]
 
-editViewContent : Html a
+editViewContent : Html TaskListMsg
 editViewContent =
   section [ class "modal-card-body"]
     [ text "card body" ]
 
-editViewFooter : Html a
+editViewFooter : Html TaskListMsg
 editViewFooter =
   footer [ class "modal-card-foot"]
     [ button [ class "button is-success"] [ text "Save changes" ]
-    , button [ class "button"] [ text "Cancel" ]
+    , button
+      [ class "button"
+      , onClick CancelEditForm
+      ]
+      [ text "Cancel" ]
     ]
