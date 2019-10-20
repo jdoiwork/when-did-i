@@ -1,8 +1,10 @@
 module Model.TaskItem exposing (TaskItem, Uid, taskItemDecoder
-  , decodeTaskItem, ChangeEvent(..), decodeUpdatedItems)
+  , decodeTaskItem, ChangeEvent(..), decodeUpdatedItems
+  , encodeTaskItem)
 
 import Time exposing (..)
 import Json.Decode as D
+import Json.Encode as E
 
 type alias Uid = String
 
@@ -43,3 +45,10 @@ changeEventKey key =
     "delete" -> D.succeed DeletedItem
     _ -> D.fail "unknown change event keyword"
 
+encodeTaskItem : TaskItem -> E.Value
+encodeTaskItem item =
+  E.object
+    [ ("uid", E.string item.uid)
+    , ("title", E.string item.title)
+    , ("lastUpdated", E.int <| posixToMillis item.lastUpdated)
+    ]

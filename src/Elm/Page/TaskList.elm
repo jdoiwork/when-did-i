@@ -94,7 +94,7 @@ updateTaskList msg model =
           ({ model
           | editingItem = model.editingItem |> Maybe.map (\item -> { item | inputTitle = title })
           }, Cmd.none)
-    ApplyEditForm taskItem ->
+    ApplyEditForm taskItem -> --let _ = Debug.log "ApplyEditForm" 0 in
       ({ model
       | editingItem = Nothing
       } , Cmd.none)
@@ -264,10 +264,9 @@ createTaskItemFromEditing editingModel =
 editView : TaskListModel -> Html TaskListMsg
 editView model =
   case model.editingItem of
-    Nothing -> Html.form [] [] --text "" -- show nothing
+    Nothing -> text "" -- show nothing
     Just editingItem ->
       Html.form [ onSubmit <| ApplyEditForm <| createTaskItemFromEditing editingItem ]
-      --Html.div [ onSubmit Ignore ]
       [ div [ class "modal is-active"]
         [ div [ class "modal-background", onClick <| CancelEditForm "modal-background" ] []
         , div [ class "modal-card" ]

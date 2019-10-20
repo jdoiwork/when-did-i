@@ -122,13 +122,15 @@ update msg model =
           in ({model | topNavState = navModel}, Cmd.none)
 
     RequestByList taskListMsg ->
-      case taskListMsg of
-        DidItItem uid -> (model, patchItemDidIt uid)
-        DeleteItem uid -> (model, deleteItem uid)
-        _ -> ({ model
-              | taskListState = updateTaskList taskListMsg model.taskListState |> first
-              }
-              , Cmd.none)
+      let newState = updateTaskList taskListMsg model.taskListState |> first
+          newCmd = case taskListMsg of
+                    DidItItem uid -> patchItemDidIt uid
+                    ApplyEditForm taskItem -> patchItem <| encodeTaskItem taskItem
+                    DeleteItem uid -> deleteItem uid
+                    _ ->  Cmd.none
+      in ({ model
+          | taskListState = updateTaskList taskListMsg model.taskListState |> first
+          }, newCmd)
 
     UpdatedItems result ->
       case result of
@@ -157,6 +159,7 @@ port loginWith : E.Value -> Cmd msg
 port logout : () -> Cmd msg
 port postNewItem : String -> Cmd msg
 port patchItemDidIt : String -> Cmd msg
+port patchItem : E.Value -> Cmd msg
 port deleteItem : String -> Cmd msg
 
 port createdNewItem : (D.Value -> msg) -> Sub msg
