@@ -16,6 +16,7 @@ import Tuple exposing (first)
 import Page.Nav exposing (..)
 import Page.Welcome exposing (..)
 import Page.Login
+import Page.LoggingIn exposing (..)
 import Page.TaskList exposing (..)
 
 import Model.TaskItem exposing (..)
@@ -101,7 +102,12 @@ update msg model =
           }, cmd )
 
     RequestLogin provider ->
-      ( model, loginWith <| E.string <| Page.Login.stringFromProvider provider)
+      ( model
+      , Cmd.batch
+          [ Nav.pushUrl model.key "/logging-in"
+          , loginWith <| E.string <| Page.Login.stringFromProvider provider
+          ]
+      )
       
     RequestTopNavMsg navMsg ->
       case navMsg of
@@ -185,6 +191,7 @@ isFixedNavbar model =
 selectPage model = model |>
   case model.url.path of
     "/login" -> showLogin
+    "/logging-in" -> showLoggingIn
     _        -> showIndex
 
 showLogin : Model -> List (Html Msg)
@@ -193,6 +200,9 @@ showLogin model =
   , Html.map (\(Page.Login.LoginWith p) -> RequestLogin p) Page.Login.login
 
   ]
+
+showLoggingIn : Model -> List (Html Msg)
+showLoggingIn model = [viewLoggingIn]
 
 showIndex : Model -> List (Html Msg)
 showIndex model =
