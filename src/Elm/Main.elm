@@ -167,8 +167,11 @@ subscriptions model =
   Sub.batch
     [ loginStatusChanged LoginStatusChanged
     , updatedItems convertUpdatedItems
-    , Time.every 5000 Tick -- every 5 sec
+    , everyNSec 3
     ]
+
+everyNSec : Float -> Sub Msg
+everyNSec n = Time.every (n * 1000) Tick
 
 convertUpdatedItems : D.Value -> Msg
 convertUpdatedItems value = value |> decodeUpdatedItems |> UpdatedItems
