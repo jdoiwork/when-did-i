@@ -33,6 +33,7 @@
     "elm-hot": "^1.1.2",
     "jest": "^24.9.0",
     "node-elm-compiler": "^5.0.4",
+    "parcel-plugin-bundle-visualiser": "^1.2.0",
     "sass": "^1.23.0",
     "typescript": "^3.6.4"
   },
