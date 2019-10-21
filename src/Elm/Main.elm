@@ -151,7 +151,7 @@ update msg model =
         | taskListState = updateTaskList (UpdatedNow now) model.taskListState |> first
         }
       , Cmd.none)
-    ZoneChanged zone -> let _ = Debug.log "ZoneChanged" zone in
+    ZoneChanged zone -> -- let _ = Debug.log "ZoneChanged" zone in
       ( { model
         | taskListState = updateTaskList (UpdatedZone zone) model.taskListState |> first
         }
