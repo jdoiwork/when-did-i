@@ -91,7 +91,7 @@ bottomNavView : NavModel -> Html NavMsg
 bottomNavView model =
   nav
     -- attrs
-    [ class "navbar is-transparent is-fixed-bottom"
+    [ class "navbar is-fixed-bottom is-primary_"
     , attribute "role" "navigation"
     , attribute "aria-label" "main navigation"
     ]
@@ -128,7 +128,7 @@ navbarMenuStartView model =
             , div
                 [ class "control"]
                 [ button
-                    [ class "button is-primary"
+                    [ class "button is-primary is-outlined_ is-inverted_"
                     , disabled <| model.didItNow == ""
                     , type_ "submit"
                     ]
