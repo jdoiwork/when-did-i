@@ -258,8 +258,14 @@ itemCardViewContent : Zone -> TaskItemRe -> Html TaskListMsg
 itemCardViewContent zone itemRe =
   div
     [ class "card-content"]
-    [ p [ class "title" ] [text itemRe.relative]
-    , p [ class "subtitle"] [text <| formatTime zone itemRe.item.lastUpdated]
+    [ p [ class "title is-capitalized diff-time" ] [text itemRe.relative]
+    , p [ class "subtitle has-text-dark-grey date-container"]
+        [ node "date" [ ]
+            [ span [ class ""] [text <| formatDate zone itemRe.item.lastUpdated]
+            , text " "
+            , span [ class "is-italic"] [text <| formatTime zone itemRe.item.lastUpdated]
+            ]
+        ]
     ]
 
 itemCardViewFooter : TaskItemRe -> Html TaskListMsg

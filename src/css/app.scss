@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono&display=swap');
+@import url('https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css');
+
+
 @import '~bulma';
 
 .bg {
@@ -9,4 +13,16 @@
     padding-bottom: $navbar-height;
   }
 
+}
+
+date {
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.date-container {
+  text-indent: 1.25em;
+}
+
+.diff-time {
+  border-bottom: solid 1px $grey-light;
 }
