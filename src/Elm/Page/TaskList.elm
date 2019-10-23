@@ -474,27 +474,30 @@ editTimeInput model =
   let lu = model.inputLastUpdated
   in
   div [ class "field is-grouped" ]
-    [ div [ class "control"]
-        [ div [ class "select"]
-            [ select [ ] <| numberOptions 0 23 lu.hour ]
+    [ div [ class "control"] -- HOUR
+        [ div [ class "select", classList [("is-danger", isErr model.inputHour.result)]]
+            [ select [ onInput <| HourInput model >> ChangedEditingItem ]
+                <| numberOptions 0 23 lu.hour ]
         ]
 
     , div [ class "control"]
         [ label [ class "is-static input is-centered" ]
             [ div [] [text ":"]]
         ]
-    , div [ class "control"]
-        [ div [ class "select"]
-            [ select [ ] <| numberOptions 0 59 lu.minute]
+    , div [ class "control"] -- MINUTE
+        [ div [ class "select", classList [("is-danger", isErr model.inputMinute.result)]]
+            [ select [ onInput <| MinuteInput model >> ChangedEditingItem ]
+                <| numberOptions 0 59 lu.minute]
         ]
     , div [ class "control"]
         [ label [ class "input is-static is-centered" ]
             [ text ":" ]
         ]
 
-    , div [ class "control" ]
-        [ div [ class "select" ]
-            [ select [ ] <| numberOptions 0 59 lu.second]
+    , div [ class "control" ] -- SECOND
+        [ div [ class "select", classList [("is-danger", isErr model.inputSecond.result)] ]
+            [ select [ onInput <| SecondInput model >> ChangedEditingItem ]
+                <| numberOptions 0 59 lu.second]
         ]
     ]
 
