@@ -38,6 +38,7 @@ type TaskListMsg = DeleteItem Uid
                  | Ignore
 
 type EditingInput = TitleInput String
+                  | LastUpdateInput Parts
 
 type alias TaskListModel =
   { items : List TaskItemRe
@@ -114,6 +115,10 @@ updateTaskList msg model =
         TitleInput title ->
           ({ model
           | editingItem = model.editingItem |> Maybe.map (\item -> { item | inputTitle = title })
+          }, Cmd.none)
+        LastUpdateInput lu ->
+          ({ model
+          | editingItem = model.editingItem |> Maybe.map (\item -> { item | inputLastUpdated = lu })
           }, Cmd.none)
     ApplyEditForm taskItem -> --let _ = Debug.log "ApplyEditForm" 0 in
       ({ model
@@ -407,6 +412,22 @@ numberOptions from to selectedValue =
 
 valueFromInt : Int -> Attribute msg
 valueFromInt = String.fromInt >> value 
+
+
+
+-- on : String -> Decoder msg -> Attribute msg
+onChangeNum : Int -> Int -> EditingModel -> (Parts -> Int -> Parts) -> Attribute TaskListMsg
+onChangeNum from to editingModel f =
+  let maybeError a =
+        case a of
+          Just x -> Json.succeed x
+          Nothing -> Json.fail "not integer"
+  in
+  targetValue
+    |> Json.map String.toInt
+    |> Json.andThen maybeError
+    |> Json.map (\n -> ChangedEditingItem <| LastUpdateInput  (f editingModel.inputLastUpdated n))
+    |> on "change"
 
 editTimeInput : EditingModel -> Html TaskListMsg
 editTimeInput model =
