@@ -124,7 +124,7 @@ updateTaskList msg model =
       let newEditingItem =
             case editingInput of
               TitleInput editingItem title ->
-                { editingItem | inputTitle = title |> withValidate (validateInputTitleR editingItem) }
+                { editingItem | inputTitle = title |> withValidate (validateInputTitle editingItem) }
               YearInput editingItem year ->
                 { editingItem | inputYear  = year  |> withValidate (validateInputYear editingItem) }
       in
@@ -463,8 +463,8 @@ editTimeInput model =
         ]
     ]
 
-validateInputTitleR : EditingModel -> String -> Result (V.Error e) String
-validateInputTitleR model rawValue =
+validateInputTitle : EditingModel -> String -> Result (V.Error e) String
+validateInputTitle model rawValue =
   let title = model.itemRe.item.title in
   rawValue
     |> V.sameInput title
