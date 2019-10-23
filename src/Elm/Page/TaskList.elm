@@ -86,7 +86,7 @@ taskListInit =
 
 taskListInitWithOutTime : TaskListModel -> TaskListModel
 taskListInitWithOutTime model =
-  { model
+  { taskListInit
   | now = model.now
   , zone = model.zone
   }
