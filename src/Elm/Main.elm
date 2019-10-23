@@ -135,34 +135,35 @@ update msg model =
                     ApplyEditForm taskItem -> patchItem <| encodeTaskItem taskItem
                     DeleteItem uid -> deleteItem uid
                     _ ->  Cmd.none
-      in ({ model
-          | taskListState = updateTaskList taskListMsg model.taskListState |> first
-          }, newCmd)
+      in
+      { model
+      | taskListState = updateTaskList taskListMsg model.taskListState |> dropCmd
+      } |> withCmd newCmd
 
     UpdatedItems result ->
       case result of
         Ok items ->
-          let (newTaskList, _) = updateTaskList (Page.TaskList.UpdatedItems items) model.taskListState 
-          in ({ model | taskListState = newTaskList }, Cmd.none)
+          { model
+          | taskListState = updateTaskList (Page.TaskList.UpdatedItems items) model.taskListState |> dropCmd
+          } |> withCmdNone
         _ -> (model, Cmd.none)
 
     Tick now -> 
-      ( { model
-        | taskListState = updateTaskList (UpdatedNow now) model.taskListState |> first
-        }
-      , Cmd.none)
+      { model
+      | taskListState = updateTaskList (UpdatedNow now) model.taskListState |> first
+      } |> withCmdNone
 
     ZoneChanged zone -> -- let _ = Debug.log "ZoneChanged" zone in
-      ( { model
-        | taskListState = updateTaskList (UpdatedZone zone) model.taskListState |> first
-        }
-      , Cmd.none)
+      { model
+      | taskListState = updateTaskList (UpdatedZone zone) model.taskListState |> first
+      } |> withCmdNone
+      
 
     ClickBody ->
-      ( { model
-        | topNavState = navUpdate ClickOutSideNav model.topNavState |> first
-        , taskListState = updateTaskList CloseAllMenu model.taskListState |> first
-        }, Cmd.none)
+      { model
+      | topNavState = navUpdate ClickOutSideNav model.topNavState |> dropCmd
+      , taskListState = updateTaskList CloseAllMenu model.taskListState |> dropCmd
+      } |> withCmdNone
 
     NotifyTaskItemIsUpdated uid ->
       { model

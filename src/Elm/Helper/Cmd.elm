@@ -6,4 +6,7 @@ dropCmd : (model, Cmd msg) -> model
 dropCmd = first
 
 withCmdNone : model -> (model, Cmd msg)
-withCmdNone model = (model, Cmd.none)
+withCmdNone = withCmd Cmd.none
+
+withCmd : Cmd msg -> model -> (model, Cmd msg)
+withCmd cmd model = (model, cmd)
