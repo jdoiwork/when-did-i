@@ -119,15 +119,18 @@ update msg model =
       
     RequestTopNavMsg navMsg ->
       case navMsg of
-        Logout -> ({model | topNavState = navInit }, logout ())
+        Logout ->
+          { model
+          | topNavState = navInit
+          } |> withCmd (logout ())
         Page.Nav.CreateItem didItNow ->
-          let (navModel, _) = navUpdate navMsg model.topNavState
-          in ({model | topNavState = navModel},
-            postNewItem didItNow
-            )
+          { model
+          | topNavState = navUpdate navMsg model.topNavState |> dropCmd
+          } |> withCmd (postNewItem didItNow)
         _ ->
-          let (navModel, _) = navUpdate navMsg model.topNavState
-          in ({model | topNavState = navModel}, Cmd.none)
+          { model
+          | topNavState = navUpdate navMsg model.topNavState |> dropCmd
+          } |> withCmdNone
 
     RequestByList taskListMsg ->
       let newCmd = case taskListMsg of
