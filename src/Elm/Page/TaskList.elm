@@ -418,6 +418,7 @@ editTitleInput model =
             , type_ "text"
             , onInput <| TitleInput model >> ChangedEditingItem
             , value model.inputTitle.rawValue
+            , classList [("is-danger", isErr model.inputTitle.result)]
             ]
             [
             ]
@@ -505,8 +506,8 @@ validateInputTitle : EditingModel -> String -> Result (V.Error e) String
 validateInputTitle model rawValue =
   let title = model.itemRe.item.title in
   rawValue
-    |> V.sameInput title
-    |> Result.andThen V.empty
+    --|> V.sameInput title
+    |> V.empty
 
 validateInputYear : EditingModel -> String -> Result (V.Error e) Int
 validateInputYear model rawValue =
@@ -551,7 +552,7 @@ editViewFooter model =
     , button 
       [ class "button is-primary"
       , type_ "submit"
-      , disabled <| isErr model.inputTitle.result
+      , disabled <| isErr (model.inputTitle.result |> Result.andThen (always model.inputYear.result))
       ]
       [ text "Save changes" ]
     ]
