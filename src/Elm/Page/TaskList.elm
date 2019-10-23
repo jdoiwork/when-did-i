@@ -463,11 +463,6 @@ editTimeInput model =
         ]
     ]
 
-validateInputTitle : EditingModel -> Bool
-validateInputTitle model =
-  model.inputTitle.rawValue == model.itemRe.item.title -- 元の入力値と同じ
-    || model.inputTitle.rawValue == "" -- 入力値が空文字列
-
 validateInputTitleR : EditingModel -> String -> Result (V.Error e) String
 validateInputTitleR model rawValue =
   let title = model.itemRe.item.title in
@@ -495,7 +490,7 @@ editViewFooter model =
     , button 
       [ class "button is-primary"
       , type_ "submit"
-      , disabled <| validateInputTitle model
+      , disabled <| isErr model.inputTitle.result
       ]
       [ text "Save changes" ]
     ]
