@@ -347,9 +347,13 @@ editViewContent model =
     [ div [ class "field"]
         [ label [ class "label"] [ text "Title" ]
         , editTitleInput model
-        , label [ class "label"] [ text "Date" ]
+        ]
+    , div [ class "field datetime-input"]
+        [ label [ class "label"] [ text "Date" ]
         , editDateInput model
-        , label [ class "label"] [ text "Time" ]
+        ]
+    , div [ class "field datetime-input"]
+        [ label [ class "label"] [ text "Time" ]
         , editTimeInput model
         ]
     ]
@@ -368,24 +372,24 @@ editTitleInput model =
 
 editDateInput : EditingModel -> Html TaskListMsg
 editDateInput model =
-  div [ class "field is-grouped"]
+  div [ class "field is-grouped" ]
     [ div [ class "control"]
-        [ input [ class "input", type_ "number", value "2019", style "width" "6em"] [] ]
+        [ input [ class "input", type_ "number", value "2019", style "width_" "5em"] [] ]
     , div [ class "control"]
-        [ label [ class "is-static input is-centered"]
-            [ div [style "text-align_" "center"] [text "-"]]
+        [ label [ class "is-static input is-centered" ]
+            [ div [] [text "-"]]
         ]
     , div [ class "control"]
         [ div [ class "select"]
             [ select [] <| numberOptions 1 12 ]
         ]
     , div [ class "control"]
-        [ label [ class "input is-static is-centered"]
+        [ label [ class "input is-static is-centered" ]
             [ text "-" ]
         ]
 
-    , div [ class "control"]
-        [ div [ class "select"]
+    , div [ class "control" ]
+        [ div [ class "select" ]
             [ select [] <| numberOptions 1 31 ]
         ]
     ]
@@ -396,14 +400,29 @@ numberOptions from to =
 
 editTimeInput : EditingModel -> Html TaskListMsg
 editTimeInput model =
-  div [ class "field is-grouped"]
+  div [ class "field is-grouped" ]
     [ div [ class "control"]
-        [ text "hour"]
-    , div [ class "control"]
-        [ text "minute"]
+        [ div [ class "select"]
+            [ select [] <| numberOptions 0 23 ]
+        ]
 
     , div [ class "control"]
-        [ text "second"]
+        [ label [ class "is-static input is-centered" ]
+            [ div [] [text ":"]]
+        ]
+    , div [ class "control"]
+        [ div [ class "select"]
+            [ select [] <| numberOptions 0 59 ]
+        ]
+    , div [ class "control"]
+        [ label [ class "input is-static is-centered" ]
+            [ text ":" ]
+        ]
+
+    , div [ class "control" ]
+        [ div [ class "select" ]
+            [ select [] <| numberOptions 0 59 ]
+        ]
     ]
 
 validateInputTitle : EditingModel -> Bool

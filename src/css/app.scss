@@ -26,3 +26,12 @@ date {
 .diff-time {
   border-bottom: solid 1px $grey-light;
 }
+
+.datetime-input {
+  input, select {
+    width: 5em;
+  }
+  label {
+    width: 0.5em;
+  }
+}
