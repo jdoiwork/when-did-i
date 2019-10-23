@@ -469,7 +469,7 @@ validateInputTitle model =
   model.inputTitle.rawValue == model.itemRe.item.title -- 元の入力値と同じ
     || model.inputTitle.rawValue == "" -- 入力値が空文字列
 
-validateInputTitleR : String -> String -> Result (V.ValidateError e) String
+validateInputTitleR : String -> String -> Result (V.Error e) String
 validateInputTitleR title rawValue =
   let sameInput v =
         if v == title
