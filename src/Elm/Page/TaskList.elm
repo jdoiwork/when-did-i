@@ -368,12 +368,43 @@ editTitleInput model =
 
 editDateInput : EditingModel -> Html TaskListMsg
 editDateInput model =
-  div [] [ text "date input"]
+  div [ class "field is-grouped"]
+    [ div [ class "control"]
+        [ input [ class "input", type_ "number", value "2019", style "width" "6em"] [] ]
+    , div [ class "control"]
+        [ label [ class "is-static input is-centered"]
+            [ div [style "text-align_" "center"] [text "-"]]
+        ]
+    , div [ class "control"]
+        [ div [ class "select"]
+            [ select [] <| numberOptions 1 12 ]
+        ]
+    , div [ class "control"]
+        [ label [ class "input is-static is-centered"]
+            [ text "-" ]
+        ]
+
+    , div [ class "control"]
+        [ div [ class "select"]
+            [ select [] <| numberOptions 1 31 ]
+        ]
+    ]
+
+numberOptions : Int -> Int -> List (Html a)
+numberOptions from to =
+  List.range from to |> List.map (\n -> option [] [ text <| String.fromInt n ])
 
 editTimeInput : EditingModel -> Html TaskListMsg
 editTimeInput model =
-  div [] [ text "time input"]
+  div [ class "field is-grouped"]
+    [ div [ class "control"]
+        [ text "hour"]
+    , div [ class "control"]
+        [ text "minute"]
 
+    , div [ class "control"]
+        [ text "second"]
+    ]
 
 validateInputTitle : EditingModel -> Bool
 validateInputTitle model =
