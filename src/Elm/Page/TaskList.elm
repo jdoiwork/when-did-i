@@ -346,15 +346,34 @@ editViewContent model =
   section [ class "modal-card-body"]
     [ div [ class "field"]
         [ label [ class "label"] [ text "Title" ]
-        , div [ class "control"]
-            [ input [ class "input"
-                    , type_ "text"
-                    , onInput <| TitleInput >> ChangedEditingItem
-                    , value model.inputTitle
-                    ] []
-            ]
+        , editTitleInput model
+        , label [ class "label"] [ text "Date" ]
+        , editDateInput model
+        , label [ class "label"] [ text "Time" ]
+        , editTimeInput model
         ]
     ]
+
+editTitleInput : EditingModel -> Html TaskListMsg
+editTitleInput model =
+  div [ class "control"]
+    [ input [ class "input"
+            , type_ "text"
+            , onInput <| TitleInput >> ChangedEditingItem
+            , value model.inputTitle
+            ]
+            [
+            ]
+    ]
+
+editDateInput : EditingModel -> Html TaskListMsg
+editDateInput model =
+  div [] [ text "date input"]
+
+editTimeInput : EditingModel -> Html TaskListMsg
+editTimeInput model =
+  div [] [ text "time input"]
+
 
 validateInputTitle : EditingModel -> Bool
 validateInputTitle model =
