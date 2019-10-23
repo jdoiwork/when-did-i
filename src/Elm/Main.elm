@@ -22,6 +22,7 @@ import Page.TaskList exposing (..)
 import Model.TaskItem exposing (..)
 
 import Helper.Format exposing (..)
+import Helper.Cmd exposing (..)
 
 main : Program () Model Msg
 main =
@@ -150,20 +151,24 @@ update msg model =
         | taskListState = updateTaskList (UpdatedNow now) model.taskListState |> first
         }
       , Cmd.none)
+
     ZoneChanged zone -> -- let _ = Debug.log "ZoneChanged" zone in
       ( { model
         | taskListState = updateTaskList (UpdatedZone zone) model.taskListState |> first
         }
       , Cmd.none)
+
     ClickBody ->
       ( { model
         | topNavState = navUpdate ClickOutSideNav model.topNavState |> first
         , taskListState = updateTaskList CloseAllMenu model.taskListState |> first
         }, Cmd.none)
+
     NotifyTaskItemIsUpdated uid ->
-      ( { model
-        | taskListState = updateTaskList (TaskItemIsUpdated uid) model.taskListState |> first
-        }, Cmd.none)
+      { model
+      | taskListState = updateTaskList (TaskItemIsUpdated uid) model.taskListState |> dropCmd
+      } |> withCmdNone
+
     Ignore -> (model, Cmd.none)
 
 -- SUBSCRIPTIONS
