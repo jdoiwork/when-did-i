@@ -471,11 +471,9 @@ validateInputTitle model =
 
 validateInputTitleR : String -> String -> Result (V.Error e) String
 validateInputTitleR title rawValue =
-  let sameInput v =
-        if v == title
-          then Err <| V.Message ""
-          else Ok rawValue
-  in sameInput rawValue |> Result.andThen V.empty
+  rawValue
+    |> V.sameInput title
+    |> Result.andThen V.empty
 
 
 editViewFooter : EditingModel -> Html TaskListMsg
