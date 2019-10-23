@@ -442,18 +442,21 @@ editDateInput model =
         [ label [ class "is-static input is-centered" ]
             [ div [] [text "-"]]
         ]
-    , div [ class "control"]
-        [ div [ class "select"]
-            [ select [ ] <| numberOptions 1 12 lu.month ]
+    , div [ class "control"] -- MONTH
+        [ div [ class "select", classList [("is-danger", isErr model.inputMonth.result)]]
+            [ select
+                [ onInput <| MonthInput model >> ChangedEditingItem ]
+                <| numberOptions 1 12 lu.month ]
         ]
     , div [ class "control"]
         [ label [ class "input is-static is-centered" ]
             [ text "-" ]
         ]
 
-    , div [ class "control" ]
-        [ div [ class "select" ]
-            [ select [ ] <| numberOptions 1 31 lu.day ]
+    , div [ class "control" ] -- DAY
+        [ div [ class "select", classList [("is-danger", isErr model.inputDay.result)] ]
+            [ select [ onInput <| DayInput model >> ChangedEditingItem ]
+                <| numberOptions 1 31 lu.day ]
         ]
     ]
 
