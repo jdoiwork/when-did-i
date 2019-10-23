@@ -374,7 +374,7 @@ editDateInput : EditingModel -> Html TaskListMsg
 editDateInput model =
   div [ class "field is-grouped" ]
     [ div [ class "control"]
-        [ input [ class "input", type_ "number", value "2019", style "width_" "5em"] [] ]
+        [ input [ class "input", type_ "number", value "2019"] [] ]
     , div [ class "control"]
         [ label [ class "is-static input is-centered" ]
             [ div [] [text "-"]]
