@@ -1,10 +1,20 @@
 module Helper.Validation exposing (..)
 
 import Json.Decode as D
+import Helper.Validation.Validator as V
 
-type alias ValidationTarget error value =
+type alias ValidationTarget e value =
   { rawValue : String -- Raw value from input element
-  , result : Result error value -- View Model for Html msg
+  , result : Result (V.ValidateError e) value -- View Model for Html msg
+  }
+
+
+
+
+withValidate : (String -> Result (V.ValidateError e) value) -> String -> ValidationTarget e value
+withValidate validator rawValue =
+  { rawValue = rawValue
+  , result = validator rawValue
   }
 
 -- MEMO:

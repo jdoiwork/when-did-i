@@ -20,6 +20,9 @@ import Time exposing (..)
 import Model.TaskItem exposing (..)
 
 import Helper.Format exposing (..)
+import Helper.Validation exposing (..)
+import Helper.Validation.Validator as V
+import Helper.Cmd exposing (..)
 
 type TaskListMsg = DeleteItem Uid
                  | EditItem Uid
@@ -37,7 +40,7 @@ type TaskListMsg = DeleteItem Uid
                  | TaskItemIsUpdated Uid
                  | Ignore
 
-type EditingInput = TitleInput String
+type EditingInput = TitleInput EditingModel String
                   | LastUpdateInput Parts
 
 type alias TaskListModel =
@@ -49,7 +52,7 @@ type alias TaskListModel =
 
 type alias EditingModel =
   { itemRe : TaskItemRe
-  , inputTitle : String
+  , inputTitle : ValidationTarget String String
   , inputLastUpdated : Parts
   }
 
@@ -102,7 +105,7 @@ updateTaskList msg model =
     OpenEditForm itemRe ->
       ({ model
       | editingItem = Just { itemRe = itemRe
-                           , inputTitle = itemRe.item.title
+                           , inputTitle = ValidationTarget itemRe.item.title <| Ok itemRe.item.title
                            , inputLastUpdated = posixToParts model.zone itemRe.item.lastUpdated
                            }
       } , Cmd.none)
@@ -110,16 +113,19 @@ updateTaskList msg model =
       ({ model
       | editingItem = Nothing
       } , Cmd.none)
+
+    -- 編集中のアイテムの入力要素が変更されたら
     ChangedEditingItem editingInput ->
       case editingInput of
-        TitleInput title ->
-          ({ model
-          | editingItem = model.editingItem |> Maybe.map (\item -> { item | inputTitle = title })
-          }, Cmd.none)
+        TitleInput editingItem title ->
+          let validateTitle = title |> withValidate (validateInputTitleR editingItem.itemRe.item.title) in
+          { model
+          | editingItem = Just { editingItem | inputTitle = validateTitle }
+          } |> withCmdNone
         LastUpdateInput lu ->
-          ({ model
+          { model
           | editingItem = model.editingItem |> Maybe.map (\item -> { item | inputLastUpdated = lu })
-          }, Cmd.none)
+          } |> withCmdNone
     ApplyEditForm taskItem -> --let _ = Debug.log "ApplyEditForm" 0 in
       ({ model
       | editingItem = Nothing
@@ -319,7 +325,7 @@ ionIcon iconName =
 createTaskItemFromEditing : EditingModel -> TaskItem
 createTaskItemFromEditing editingModel =
   let item = editingModel.itemRe.item
-  in { item | title = editingModel.inputTitle }
+  in { item | title = editingModel.inputTitle.rawValue }
 
 editView : TaskListModel -> Html TaskListMsg
 editView model =
@@ -372,8 +378,8 @@ editTitleInput model =
   div [ class "control"]
     [ input [ class "input"
             , type_ "text"
-            , onInput <| TitleInput >> ChangedEditingItem
-            , value model.inputTitle
+            , onInput <| TitleInput model >> ChangedEditingItem
+            , value model.inputTitle.rawValue
             ]
             [
             ]
@@ -460,8 +466,21 @@ editTimeInput model =
 
 validateInputTitle : EditingModel -> Bool
 validateInputTitle model =
-  model.inputTitle == model.itemRe.item.title -- 元の入力値と同じ
-    || model.inputTitle == "" -- 入力値が空文字列
+  model.inputTitle.rawValue == model.itemRe.item.title -- 元の入力値と同じ
+    || model.inputTitle.rawValue == "" -- 入力値が空文字列
+
+validateInputTitleR : String -> String -> Result (V.ValidateError e) String
+validateInputTitleR title rawValue =
+  let sameInput v =
+        if v == title
+          then Err <| V.Message ""
+          else Ok rawValue
+      empty v =
+        if v == ""
+          then Err <| V.Message "empty"
+          else Ok v
+  in sameInput rawValue |> Result.andThen empty
+
 
 editViewFooter : EditingModel -> Html TaskListMsg
 editViewFooter model =
