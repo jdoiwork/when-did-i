@@ -153,12 +153,12 @@ update msg model =
 
     Tick now -> 
       { model
-      | taskListState = updateTaskList (UpdatedNow now) model.taskListState |> first
+      | taskListState = updateTaskList (UpdatedNow now) model.taskListState |> dropCmd
       } |> withCmdNone
 
     ZoneChanged zone -> -- let _ = Debug.log "ZoneChanged" zone in
       { model
-      | taskListState = updateTaskList (UpdatedZone zone) model.taskListState |> first
+      | taskListState = updateTaskList (UpdatedZone zone) model.taskListState |> dropCmd
       } |> withCmdNone
       
 
