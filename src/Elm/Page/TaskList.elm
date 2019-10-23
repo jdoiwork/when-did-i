@@ -151,14 +151,14 @@ updateTaskList msg model =
               MonthInput editingItem month ->
                 { editingItem | inputMonth  = month  |> withValidate (validateInputMonth editingItem) }
               DayInput editingItem day ->
-                { editingItem | inputDay  = day  |> withValidate (validateInputYear editingItem) }
+                { editingItem | inputDay  = day  |> withValidate (validateInputDay editingItem) }
 
               HourInput editingItem hour ->
-                { editingItem | inputHour  = hour  |> withValidate (validateInputYear editingItem) }
+                { editingItem | inputHour  = hour  |> withValidate (validateInputHour editingItem) }
               MinuteInput editingItem minute ->
-                { editingItem | inputMinute  = minute  |> withValidate (validateInputYear editingItem) }
+                { editingItem | inputMinute  = minute  |> withValidate (validateInputMinute editingItem) }
               SecondInput editingItem second ->
-                { editingItem | inputSecond  = second  |> withValidate (validateInputYear editingItem) }
+                { editingItem | inputSecond  = second  |> withValidate (validateInputSecond editingItem) }
       in
       { model
       | editingItem = Just newEditingItem
@@ -511,13 +511,27 @@ validateInputYear model rawValue =
 
 
 validateInputMonth : EditingModel -> String -> Result (V.Error e) Int
-validateInputMonth model rawValue =
-  --let year = String.fromInt model.inputLastUpdated.year in
+validateInputMonth = validateInputRange 1 12
+
+validateInputDay : EditingModel -> String -> Result (V.Error e) Int
+validateInputDay = validateInputRange 1 31
+
+validateInputHour : EditingModel -> String -> Result (V.Error e) Int
+validateInputHour = validateInputRange 0 23
+
+validateInputMinute : EditingModel -> String -> Result (V.Error e) Int
+validateInputMinute = validateInputRange 0 59
+
+validateInputSecond : EditingModel -> String -> Result (V.Error e) Int
+validateInputSecond = validateInputRange 0 59
+
+
+validateInputRange : Int -> Int -> EditingModel -> String -> Result (V.Error e) Int
+validateInputRange from to model rawValue =
   rawValue
     |> V.empty
     |> Result.andThen V.toInt
-    |> Result.andThen (V.intRange 1 12)
-
+    |> Result.andThen (V.intRange from to)
 
 editViewFooter : EditingModel -> Html TaskListMsg
 editViewFooter model =
