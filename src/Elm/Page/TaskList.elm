@@ -56,6 +56,11 @@ type alias EditingModel =
   { itemRe : TaskItemRe
   , inputTitle : ValidationTarget String String
   , inputYear : ValidationTarget String Int
+  , inputMonth : ValidationTarget String Int
+  , inputDay : ValidationTarget String Int
+  , inputHour : ValidationTarget String Int
+  , inputMinute : ValidationTarget String Int
+  , inputSecond : ValidationTarget String Int
   , inputLastUpdated : Parts
   }
 
@@ -106,11 +111,21 @@ updateTaskList msg model =
       -- | items = model.items
       } , Cmd.none)
     OpenEditForm itemRe ->
-      let inputLastUpdated = posixToParts model.zone itemRe.item.lastUpdated in
+      let inputLastUpdated = posixToParts model.zone itemRe.item.lastUpdated
+          vt getter = ValidationTarget (String.fromInt <| getter inputLastUpdated) (Ok <| getter inputLastUpdated)
+      in
       ({ model
       | editingItem = Just { itemRe = itemRe
                            , inputTitle = ValidationTarget itemRe.item.title <| Ok itemRe.item.title
-                           , inputYear = ValidationTarget (String.fromInt inputLastUpdated.year) (Ok inputLastUpdated.year)
+
+                           , inputYear = vt .year
+                           , inputMonth = vt .month
+                           , inputDay = vt .day
+
+                           , inputHour = vt .hour 
+                           , inputMinute = vt .minute
+                           , inputSecond = vt .second
+
                            , inputLastUpdated = inputLastUpdated
                            }
       } , Cmd.none)
