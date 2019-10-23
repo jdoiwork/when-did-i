@@ -475,11 +475,7 @@ validateInputTitleR title rawValue =
         if v == title
           then Err <| V.Message ""
           else Ok rawValue
-      empty v =
-        if v == ""
-          then Err <| V.Message "empty"
-          else Ok v
-  in sameInput rawValue |> Result.andThen empty
+  in sameInput rawValue |> Result.andThen V.empty
 
 
 editViewFooter : EditingModel -> Html TaskListMsg

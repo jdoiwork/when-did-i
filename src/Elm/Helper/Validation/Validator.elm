@@ -5,3 +5,10 @@ type Error e
   | Message String
   | Custom e
 
+empty : String -> Result (Error e) String
+empty v =
+  case v of
+  ""        -> Err Empty
+  otherwise -> Ok v
+
+
