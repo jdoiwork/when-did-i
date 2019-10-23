@@ -44,6 +44,11 @@ type TaskListMsg = DeleteItem Uid
 
 type EditingInput = TitleInput EditingModel String
                   | YearInput EditingModel String
+                  | MonthInput EditingModel String
+                  | DayInput EditingModel String
+                  | HourInput EditingModel String
+                  | MinuteInput EditingModel String
+                  | SecondInput EditingModel String
 
 type alias TaskListModel =
   { items : List TaskItemRe
@@ -140,8 +145,20 @@ updateTaskList msg model =
             case editingInput of
               TitleInput editingItem title ->
                 { editingItem | inputTitle = title |> withValidate (validateInputTitle editingItem) }
+
               YearInput editingItem year ->
                 { editingItem | inputYear  = year  |> withValidate (validateInputYear editingItem) }
+              MonthInput editingItem month ->
+                { editingItem | inputMonth  = month  |> withValidate (validateInputMonth editingItem) }
+              DayInput editingItem day ->
+                { editingItem | inputDay  = day  |> withValidate (validateInputYear editingItem) }
+
+              HourInput editingItem hour ->
+                { editingItem | inputHour  = hour  |> withValidate (validateInputYear editingItem) }
+              MinuteInput editingItem minute ->
+                { editingItem | inputMinute  = minute  |> withValidate (validateInputYear editingItem) }
+              SecondInput editingItem second ->
+                { editingItem | inputSecond  = second  |> withValidate (validateInputYear editingItem) }
       in
       { model
       | editingItem = Just newEditingItem
@@ -491,6 +508,15 @@ validateInputYear model rawValue =
   rawValue
     |> V.empty
     |> Result.andThen V.toInt
+
+
+validateInputMonth : EditingModel -> String -> Result (V.Error e) Int
+validateInputMonth model rawValue =
+  --let year = String.fromInt model.inputLastUpdated.year in
+  rawValue
+    |> V.empty
+    |> Result.andThen V.toInt
+    |> Result.andThen (V.intRange 1 12)
 
 
 editViewFooter : EditingModel -> Html TaskListMsg

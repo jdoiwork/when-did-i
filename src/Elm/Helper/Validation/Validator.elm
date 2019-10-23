@@ -4,6 +4,7 @@ type Error e
   = Empty
   | SameInput String
   | ToInt String
+  | IntRange Int Int Int
   | Message String
   | Custom e
 
@@ -24,3 +25,9 @@ toInt v =
   case String.toInt v of
     Nothing -> Err <| ToInt v
     Just n -> Ok n
+
+intRange : Int -> Int -> Int -> Result (Error e) Int
+intRange from to n =
+  if from <= n && n <= to
+    then Ok n
+    else Err <| IntRange from to n
