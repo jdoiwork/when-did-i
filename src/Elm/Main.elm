@@ -129,8 +129,7 @@ update msg model =
           in ({model | topNavState = navModel}, Cmd.none)
 
     RequestByList taskListMsg ->
-      let newState = updateTaskList taskListMsg model.taskListState |> first
-          newCmd = case taskListMsg of
+      let newCmd = case taskListMsg of
                     DidItItem uid -> patchItemDidIt uid
                     ApplyEditForm taskItem -> patchItem <| encodeTaskItem taskItem
                     DeleteItem uid -> deleteItem uid
