@@ -23,7 +23,7 @@ tokenDateList =
 
 tokenTimeList : List DF.Token
 tokenTimeList =
-  [ DF.hourFixed  
+  [ DF.hourMilitaryFromOneFixed  
   , DF.text ":"
   , DF.minuteFixed
   , DF.text ":"
