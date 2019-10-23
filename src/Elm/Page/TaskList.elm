@@ -376,16 +376,18 @@ editTitleInput model =
 
 editDateInput : EditingModel -> Html TaskListMsg
 editDateInput model =
+  let lu = model.inputLastUpdated
+  in
   div [ class "field is-grouped" ]
     [ div [ class "control"]
-        [ input [ class "input", type_ "number", value "2019"] [] ]
+        [ input [ class "input", type_ "number", valueFromInt lu.year ] [] ]
     , div [ class "control"]
         [ label [ class "is-static input is-centered" ]
             [ div [] [text "-"]]
         ]
     , div [ class "control"]
         [ div [ class "select"]
-            [ select [] <| numberOptions 1 12 ]
+            [ select [ ] <| numberOptions 1 12 lu.month ]
         ]
     , div [ class "control"]
         [ label [ class "input is-static is-centered" ]
@@ -394,20 +396,26 @@ editDateInput model =
 
     , div [ class "control" ]
         [ div [ class "select" ]
-            [ select [] <| numberOptions 1 31 ]
+            [ select [ ] <| numberOptions 1 31 lu.day ]
         ]
     ]
 
-numberOptions : Int -> Int -> List (Html a)
-numberOptions from to =
-  List.range from to |> List.map (\n -> option [] [ text <| String.fromInt n ])
+numberOptions : Int -> Int -> Int -> List (Html a)
+numberOptions from to selectedValue =
+  List.range from to
+    |> List.map (\n -> option [ valueFromInt n, selected <| n == selectedValue ] [ text <| String.fromInt n ])
+
+valueFromInt : Int -> Attribute msg
+valueFromInt = String.fromInt >> value 
 
 editTimeInput : EditingModel -> Html TaskListMsg
 editTimeInput model =
+  let lu = model.inputLastUpdated
+  in
   div [ class "field is-grouped" ]
     [ div [ class "control"]
         [ div [ class "select"]
-            [ select [] <| numberOptions 0 23 ]
+            [ select [ ] <| numberOptions 0 23 lu.hour ]
         ]
 
     , div [ class "control"]
@@ -416,7 +424,7 @@ editTimeInput model =
         ]
     , div [ class "control"]
         [ div [ class "select"]
-            [ select [] <| numberOptions 0 59 ]
+            [ select [ ] <| numberOptions 0 59 lu.minute]
         ]
     , div [ class "control"]
         [ label [ class "input is-static is-centered" ]
@@ -425,7 +433,7 @@ editTimeInput model =
 
     , div [ class "control" ]
         [ div [ class "select" ]
-            [ select [] <| numberOptions 0 59 ]
+            [ select [ ] <| numberOptions 0 59 lu.second]
         ]
     ]
 
