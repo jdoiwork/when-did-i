@@ -24,6 +24,8 @@ import Helper.Validation exposing (..)
 import Helper.Validation.Validator as V
 import Helper.Cmd exposing (..)
 
+import Result.Extra exposing (isErr)
+
 type TaskListMsg = DeleteItem Uid
                  | EditItem Uid
                  | DidItItem Uid
@@ -41,7 +43,7 @@ type TaskListMsg = DeleteItem Uid
                  | Ignore
 
 type EditingInput = TitleInput EditingModel String
-                  | LastUpdateInput Parts
+                  | YearInput EditingModel String
 
 type alias TaskListModel =
   { items : List TaskItemRe
@@ -53,6 +55,7 @@ type alias TaskListModel =
 type alias EditingModel =
   { itemRe : TaskItemRe
   , inputTitle : ValidationTarget String String
+  , inputYear : ValidationTarget String Int
   , inputLastUpdated : Parts
   }
 
@@ -103,10 +106,12 @@ updateTaskList msg model =
       -- | items = model.items
       } , Cmd.none)
     OpenEditForm itemRe ->
+      let inputLastUpdated = posixToParts model.zone itemRe.item.lastUpdated in
       ({ model
       | editingItem = Just { itemRe = itemRe
                            , inputTitle = ValidationTarget itemRe.item.title <| Ok itemRe.item.title
-                           , inputLastUpdated = posixToParts model.zone itemRe.item.lastUpdated
+                           , inputYear = ValidationTarget (String.fromInt inputLastUpdated.year) (Ok inputLastUpdated.year)
+                           , inputLastUpdated = inputLastUpdated
                            }
       } , Cmd.none)
     CancelEditForm from -> -- let _ = Debug.log "cancel edit from" from in
@@ -118,14 +123,19 @@ updateTaskList msg model =
     ChangedEditingItem editingInput ->
       case editingInput of
         TitleInput editingItem title ->
-          let validateTitle = title |> withValidate (validateInputTitleR editingItem.itemRe.item.title) in
+          let validateTitle = title |> withValidate (validateInputTitleR editingItem) in
           { model
           | editingItem = Just { editingItem | inputTitle = validateTitle }
           } |> withCmdNone
-        LastUpdateInput lu ->
+        YearInput editingItem year ->
+          let validateYear = year |> withValidate (validateInputYear editingItem) in
           { model
-          | editingItem = model.editingItem |> Maybe.map (\item -> { item | inputLastUpdated = lu })
+          | editingItem = Just { editingItem | inputYear = validateYear }
           } |> withCmdNone
+        -- LastUpdateInput lu ->
+        --   { model
+        --   | editingItem = model.editingItem |> Maybe.map (\item -> { item | inputLastUpdated = lu })
+        --   } |> withCmdNone
     ApplyEditForm taskItem -> --let _ = Debug.log "ApplyEditForm" 0 in
       ({ model
       | editingItem = Nothing
@@ -390,8 +400,16 @@ editDateInput model =
   let lu = model.inputLastUpdated
   in
   div [ class "field is-grouped" ]
-    [ div [ class "control"]
-        [ input [ class "input", type_ "number", valueFromInt lu.year ] [] ]
+    [ div [ class "control"] -- YEAR
+        [ input [ class "input"
+                , type_ "number"
+                , value model.inputYear.rawValue
+                , onInput <| YearInput model >> ChangedEditingItem
+                , classList [("is-danger", isErr model.inputYear.result)]
+                ]
+                [
+                ]
+        ]
     , div [ class "control"]
         [ label [ class "is-static input is-centered" ]
             [ div [] [text "-"]]
@@ -419,21 +437,6 @@ numberOptions from to selectedValue =
 valueFromInt : Int -> Attribute msg
 valueFromInt = String.fromInt >> value 
 
-
-
--- on : String -> Decoder msg -> Attribute msg
-onChangeNum : Int -> Int -> EditingModel -> (Parts -> Int -> Parts) -> Attribute TaskListMsg
-onChangeNum from to editingModel f =
-  let maybeError a =
-        case a of
-          Just x -> Json.succeed x
-          Nothing -> Json.fail "not integer"
-  in
-  targetValue
-    |> Json.map String.toInt
-    |> Json.andThen maybeError
-    |> Json.map (\n -> ChangedEditingItem <| LastUpdateInput  (f editingModel.inputLastUpdated n))
-    |> on "change"
 
 editTimeInput : EditingModel -> Html TaskListMsg
 editTimeInput model =
@@ -469,11 +472,19 @@ validateInputTitle model =
   model.inputTitle.rawValue == model.itemRe.item.title -- 元の入力値と同じ
     || model.inputTitle.rawValue == "" -- 入力値が空文字列
 
-validateInputTitleR : String -> String -> Result (V.Error e) String
-validateInputTitleR title rawValue =
+validateInputTitleR : EditingModel -> String -> Result (V.Error e) String
+validateInputTitleR model rawValue =
+  let title = model.itemRe.item.title in
   rawValue
     |> V.sameInput title
     |> Result.andThen V.empty
+
+validateInputYear : EditingModel -> String -> Result (V.Error e) Int
+validateInputYear model rawValue =
+  --let year = String.fromInt model.inputLastUpdated.year in
+  rawValue
+    |> V.empty
+    |> Result.andThen V.toInt
 
 
 editViewFooter : EditingModel -> Html TaskListMsg
