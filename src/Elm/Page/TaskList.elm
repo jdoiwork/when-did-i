@@ -360,17 +360,45 @@ ionIcon iconName =
     [ i [class "icon", class <| "ion-" ++ iconName]
       []]
 
-createTaskItemFromEditing : EditingModel -> TaskItem
-createTaskItemFromEditing editingModel =
-  let item = editingModel.itemRe.item
-  in { item | title = editingModel.inputTitle.rawValue }
+createTaskItemFromEditing : Zone -> EditingModel -> TaskItem
+createTaskItemFromEditing zone model =
+  let item = model.itemRe.item
+  in
+  case (model.inputTitle.result, editingModelToPosix zone model) of
+    (Ok title, Just posix) ->
+      { item
+      | title = model.inputTitle.rawValue
+      , lastUpdated = posix
+      }
+    _ -> item
+
+
+
+editingModelToPosix : Zone -> EditingModel -> Maybe Posix
+editingModelToPosix zone model =
+  let tuple3 a b c = (a, b, c)
+      dateParts = Result.map3 tuple3
+        model.inputYear.result
+        model.inputMonth.result
+        model.inputDay.result
+      timeParts = Result.map3 tuple3
+        model.inputHour.result
+        model.inputMinute.result
+        model.inputSecond.result
+      rparts = Result.map2 (\(y, m, d) (h, mm, s) -> Parts y m d h mm s 0)
+                dateParts
+                timeParts
+  in
+  case rparts of
+    Ok parts -> Just <| partsToPosix zone parts
+    Err _ -> Nothing
 
 editView : TaskListModel -> Html TaskListMsg
 editView model =
   case model.editingItem of
     Nothing -> text "" -- show nothing
     Just editingItem ->
-      Html.form [ onSubmit <| ApplyEditForm <| createTaskItemFromEditing editingItem ]
+      Html.form [ onSubmit <| ApplyEditForm <| createTaskItemFromEditing model.zone editingItem ]
       [ div [ class "modal is-active"]
         [ div [ class "modal-background", onClick <| CancelEditForm "modal-background" ] []
         , div [ class "modal-card" ]
