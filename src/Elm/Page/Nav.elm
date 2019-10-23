@@ -91,14 +91,17 @@ bottomNavView : NavModel -> Html NavMsg
 bottomNavView model =
   nav
     -- attrs
-    [ class "navbar is-fixed-bottom is-primary_"
+    [ class "navbar is-fixed-bottom is-primary"
     , attribute "role" "navigation"
     , attribute "aria-label" "main navigation"
     ]
     -- elements
     [ div
         -- [ class "navbar-menu", classList [("is-active", model.isActive)]]
-        [ class "navbar-menu is-active", style "justify-content" "stretch" ]
+        [ class "navbar-menu is-active"
+        , style "justify-content" "stretch"
+        , style "background-color" "transparent"
+        ]
         [ form
             [ class "form", styleWidth100
             , onSubmit <| CreateItem model.didItNow
@@ -128,7 +131,7 @@ navbarMenuStartView model =
             , div
                 [ class "control"]
                 [ button
-                    [ class "button is-primary is-outlined_ is-inverted_"
+                    [ class "button is-primary is-outlined is-inverted"
                     , disabled <| model.didItNow == ""
                     , type_ "submit"
                     ]
