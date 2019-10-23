@@ -49,6 +49,7 @@ type alias TaskListModel =
 type alias EditingModel =
   { itemRe : TaskItemRe
   , inputTitle : String
+  , inputLastUpdated : Parts
   }
 
 type alias TaskItemRe =
@@ -99,7 +100,10 @@ updateTaskList msg model =
       } , Cmd.none)
     OpenEditForm itemRe ->
       ({ model
-      | editingItem = Just { itemRe = itemRe, inputTitle = itemRe.item.title }
+      | editingItem = Just { itemRe = itemRe
+                           , inputTitle = itemRe.item.title
+                           , inputLastUpdated = posixToParts model.zone itemRe.item.lastUpdated
+                           }
       } , Cmd.none)
     CancelEditForm from -> -- let _ = Debug.log "cancel edit from" from in
       ({ model
