@@ -121,21 +121,17 @@ updateTaskList msg model =
 
     -- 編集中のアイテムの入力要素が変更されたら
     ChangedEditingItem editingInput ->
-      case editingInput of
-        TitleInput editingItem title ->
-          let validateTitle = title |> withValidate (validateInputTitleR editingItem) in
-          { model
-          | editingItem = Just { editingItem | inputTitle = validateTitle }
-          } |> withCmdNone
-        YearInput editingItem year ->
-          let validateYear = year |> withValidate (validateInputYear editingItem) in
-          { model
-          | editingItem = Just { editingItem | inputYear = validateYear }
-          } |> withCmdNone
-        -- LastUpdateInput lu ->
-        --   { model
-        --   | editingItem = model.editingItem |> Maybe.map (\item -> { item | inputLastUpdated = lu })
-        --   } |> withCmdNone
+      let newEditingItem =
+            case editingInput of
+              TitleInput editingItem title ->
+                { editingItem | inputTitle = title |> withValidate (validateInputTitleR editingItem) }
+              YearInput editingItem year ->
+                { editingItem | inputYear  = year  |> withValidate (validateInputYear editingItem) }
+      in
+      { model
+      | editingItem = Just newEditingItem
+      } |> withCmdNone
+
     ApplyEditForm taskItem -> --let _ = Debug.log "ApplyEditForm" 0 in
       ({ model
       | editingItem = Nothing
