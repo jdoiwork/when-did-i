@@ -341,7 +341,7 @@ itemCardViewFooter itemRe =
                 , classList [("is-loading", itemRe.isUpdating)]
                 , onClick <| DidItItem item.uid
                 ]
-                "More"
+                "Now"
             ]
         ]
     ]
